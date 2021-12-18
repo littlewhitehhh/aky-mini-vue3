@@ -1,0 +1,22 @@
+{
+    "name": "mini-vue",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/jest": "^27.0.3",
+        "jest": "^27.4.5"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.16.5",
+        "@babel/preset-env": "^7.16.5",
+        "@babel/preset-typescript": "^7.16.5",
+        "babel-jest": "^27.4.5"
+    }
+}
