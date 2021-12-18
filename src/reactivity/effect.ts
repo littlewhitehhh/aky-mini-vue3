@@ -10,7 +10,7 @@
 //   activeEffect = function () {};
 // }
 
-//代码优化
+//代码优化  面向对象思想
 let activeEffect;
 class ReactiveEffect {
   private _fn: any;
@@ -54,6 +54,6 @@ export function trigger(target, key) {
   let dep = objMap.get(key);
   //去执行dep里面的函数
   dep.forEach((effect) => {
-    effect();
+    effect.run();
   });
 }
