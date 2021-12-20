@@ -1,5 +1,5 @@
 import { reactive } from "../reactive";
-import { effect } from "../effect";
+import { effect, stop } from "../effect";
 
 describe("effect", () => {
   it("happy path", () => {
@@ -28,8 +28,73 @@ describe("effect", () => {
     });
 
     expect(foo).toBe(1);
-    runner()   //函数执行,说明了effect返回了一个函数？并且返回的为传入的函数？
-    expect(foo).toBe(2)
+    runner(); //函数执行,说明了effect返回了一个函数？并且返回的为传入的函数？
+    expect(foo).toBe(2);
     expect(runner()).toBe(3);
+  });
+
+  it("scheduler", () => {
+    //通过effect第二个参数给定一个scheduler的fn
+    // effect 第一次执行的时候，还会执行第一个fn参数
+    //当响应式对象 update 不会执行第一个fn参数，而是执行scheduler
+    // 当执行runner的时候，会执行fn
+    let dummy;
+    let run: any;
+    const scheduler = jest.fn(() => {
+      run = runner;
+    });
+    const obj = reactive({ foo: 1 });
+    const runner = effect(
+      //effect 传入了两个参数  1回调函数 2 option对象
+      () => {
+        dummy = obj.foo;
+      },
+      { scheduler }
+    );
+    expect(scheduler).not.toHaveBeenCalled();
+    expect(dummy).toBe(1);
+
+    //should be called on first trigger
+    obj.foo++;
+    expect(scheduler).toHaveBeenCalledTimes(1);
+    //should not run yet
+    expect(dummy).toBe(1);
+    //manually run
+    run();
+    //should have run
+    expect(dummy).toBe(2);
+    //
+  });
+
+  it("stop", () => {
+    let dummy;
+    const obj = reactive({ prop: 1 });
+    const runner = effect(() => {
+      dummy = obj.prop;
+    });
+    obj.prop = 2;
+    expect(dummy).toBe(2);
+    stop(runner); //
+    obj.prop = 3;
+    expect(dummy).toBe(2);
+
+    runner();
+    expect(dummy).toBe(3);
+  });
+
+  it("onStop", () => {
+    const obj = reactive({
+      foo: 1,
+    });
+    const onStop = jest.fn();
+    let dummy;
+    const runner = effect(
+      () => {
+        dummy = obj.foo;
+      },
+      { onStop }
+    );
+    stop(runner);
+    expect(onStop).toBeCalledTimes(1);
   });
 });

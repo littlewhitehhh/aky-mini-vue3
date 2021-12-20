@@ -10,27 +10,61 @@
 //   activeEffect = function () {};
 // }
 
+//工具函数
+function cleanupEffect(effect) {
+  effect.deps.forEach((dep: any) => {
+    dep.delete(effect);
+  });
+}
+
 //代码优化  面向对象思想
-let activeEffect;
+let activeEffect: any;
+
 class ReactiveEffect {
   private _fn: any;
-  constructor(fn) {
+  deps = [];
+  active = true;
+  scheduler?: () => void;
+  onStop?: () => void;
+  constructor(fn, option) {
     this._fn = fn;
+    this.scheduler = option?.scheduler;
+    this.onStop = option?.onStop
+    // this.deps = [];
+    // this.active = true;
   }
   run() {
     activeEffect = this;
-    return this._fn()
+    return this._fn();
+  }
+  stop() {
+    //删除effect
+    if (this.active) {
+      cleanupEffect(this);
+      if(this.onStop){
+        this.onStop()
+      }
+      this.active = false;
+    }
   }
 }
 
 //effect函数
-export function effect(fn) {
-  const _effect = new ReactiveEffect(fn);
+export function effect(fn, option: any = {}) {
+  const _effect = new ReactiveEffect(fn, option);
+  // Object.assign(_effect, option);
+
   _effect.run();
 
-  const runner = _effect.run.bind(_effect)  //直接调用runnner  
-  return runner
+  const runner: any = _effect.run.bind(_effect); //直接调用runnner
+  runner.effect = _effect;
+  return runner;
 }
+
+export function stop(runner) {
+  runner.effect.stop();
+}
+
 const targetMap = new WeakMap();
 // 进行依赖收集track
 export function track(target, key) {
@@ -49,7 +83,9 @@ export function track(target, key) {
     objMap.set(key, dep);
   }
   //d将依赖函数添加给dep
+  if (!activeEffect) return;
   dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
+  activeEffect.deps.push(dep); //?
 }
 //触发依赖trigger
 export function trigger(target, key) {
@@ -58,8 +94,10 @@ export function trigger(target, key) {
   let dep = objMap.get(key);
   //去执行dep里面的函数
   dep.forEach((effect) => {
-    effect.run();
+    if (effect.scheduler) {
+      effect.scheduler();
+    } else {
+      effect.run();
+    }
   });
 }
-
-
