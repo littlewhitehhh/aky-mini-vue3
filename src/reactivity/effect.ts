@@ -19,16 +19,20 @@ class ReactiveEffect {
   }
   run() {
     activeEffect = this;
-    this._fn();
+    return this._fn()
   }
 }
 
+//effect函数
 export function effect(fn) {
   const _effect = new ReactiveEffect(fn);
   _effect.run();
+
+  const runner = _effect.run.bind(_effect)  //直接调用runnner  
+  return runner
 }
 const targetMap = new WeakMap();
-// 进行依赖收集
+// 进行依赖收集track
 export function track(target, key) {
   //1、先获取到key的依赖集合dep
   //所有对象的的以来集合targetMap -> 当前对象的依赖集合objMap -> 当前key的依赖集合
@@ -47,7 +51,7 @@ export function track(target, key) {
   //d将依赖函数添加给dep
   dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
 }
-//触发依赖
+//触发依赖trigger
 export function trigger(target, key) {
   //1、先获取到key的依赖集合dep
   let objMap = targetMap.get(target);
@@ -57,3 +61,5 @@ export function trigger(target, key) {
     effect.run();
   });
 }
+
+
