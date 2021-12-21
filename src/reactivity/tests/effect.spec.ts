@@ -56,7 +56,7 @@ describe("effect", () => {
 
     //should be called on first trigger
     obj.foo++;
-    expect(scheduler).toHaveBeenCalledTimes(1);
+    expect(scheduler).toHaveBeenCalledTimes(1);  // scheduler被调用了一次
     //should not run yet
     expect(dummy).toBe(1);
     //manually run
@@ -67,6 +67,10 @@ describe("effect", () => {
   });
 
   it("stop", () => {
+    // stop接受effect执行返回的函数作为参数。
+    //用一个变量runner接受effect执行返回的函数
+    //调用stop并传入runner后，当传入的函数依赖的响应式对象的 property 的值更新时不会再执行该函数，
+    //只有当调用runner时才会恢复执行该函数。
     let dummy;
     const obj = reactive({ prop: 1 });
     const runner = effect(() => {
@@ -77,9 +81,10 @@ describe("effect", () => {
     stop(runner); //
     obj.prop = 3;
     expect(dummy).toBe(2);
-
+    obj.prop ++ 
+    expect(dummy).toBe(2)
     runner();
-    expect(dummy).toBe(3);
+    expect(dummy).toBe(4);
   });
 
   it("onStop", () => {
