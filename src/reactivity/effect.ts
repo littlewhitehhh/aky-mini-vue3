@@ -100,6 +100,7 @@ export function track(target, key) {
     objMap.set(key, dep);
   }
   //d将依赖函数添加给dep
+  
   // if (!activeEffect) return;
   dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
   activeEffect?.deps.push(dep); //?
@@ -108,6 +109,8 @@ export function track(target, key) {
 export function trigger(target, key) {
   //1、先获取到key的依赖集合dep
   let objMap = targetMap.get(target);
+  console.log(objMap);
+  
   let dep = objMap.get(key);
   //去执行dep里面的函数
   dep.forEach((effect) => {

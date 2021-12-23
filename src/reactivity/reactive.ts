@@ -1,5 +1,10 @@
-import { track, trigger } from "./effect";
-import { mutableHandlers, readonlyHandlers } from "./baseHandler";
+// import { track, trigger } from "./effect";
+import {
+  mutableHandlers,
+  readonlyHandlers,
+  shallowReactiveHandlers,
+  shallowReadonlyHandlers,
+} from "./baseHandler";
 
 /**
  * reative 和 readonly 的get和set重复代码较多，进行代码抽取重构
@@ -86,6 +91,20 @@ export function isReadonly(obj) {
 //isProxy
 export function isProxy(obj) {
   // 检查对象是否是由 reactive 或 readonly 创建的 proxy。
-  //也就是说满足上面isReactive和isReadonly任意一个就是proxy   &&(与)  ||(或) 
+  //也就是说满足上面isReactive和isReadonly任意一个就是proxy   &&(与)  ||(或)
   return isReadonly(obj) === true || isReactive(obj) === true;
+}
+
+//shallowReactive
+//创建一个 proxy，使其自身的 property为只读，但不执行嵌套对象的深度只读转换 (暴露原始值)
+// 自身property为reactive  内部嵌套不是reactive
+export function shallowReactive(obj) {
+  return createReactiveObject(obj, shallowReactiveHandlers );
+}
+
+//shallowReadonly
+//创建一个 proxy，使其自身的 property为只读，但不执行嵌套对象的深度只读转换 (暴露原始值)
+// 自身property为readonly  内部嵌套不是readonly
+export function shallowReadonly(obj) {
+  return createReactiveObject(obj, shallowReadonlyHandlers);
 }
