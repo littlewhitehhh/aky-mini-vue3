@@ -80,5 +80,12 @@ export function isReactive(obj) {
 
 export function isReadonly(obj) {
   //同理
-  return  !!obj[ReactiveFlags.IS_READONLY];
+  return !!obj[ReactiveFlags.IS_READONLY];
+}
+
+//isProxy
+export function isProxy(obj) {
+  // 检查对象是否是由 reactive 或 readonly 创建的 proxy。
+  //也就是说满足上面isReactive和isReadonly任意一个就是proxy
+  return isReadonly(obj) === true || isReactive(obj) === true;
 }
