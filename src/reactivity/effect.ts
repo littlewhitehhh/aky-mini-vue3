@@ -79,6 +79,8 @@ export function stop(runner) {
 const targetMap = new WeakMap();
 // 进行依赖收集track
 export function track(target, key) {
+    console.log("收集收集依赖了");
+    
 
    // 若不应该收集依赖则直接返回
    if (!shouldTrack || activeEffect === undefined) {
@@ -104,9 +106,13 @@ export function track(target, key) {
   // if (!activeEffect) return;
   dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
   activeEffect?.deps.push(dep); //?
+  console.log(dep);
+  
 }
 //触发依赖trigger
 export function trigger(target, key) {
+  console.log("触发依赖了");
+
   //1、先获取到key的依赖集合dep
   let objMap = targetMap.get(target);
   console.log(objMap);

@@ -1,5 +1,5 @@
 import { effect } from "../effect";
-import { isReactive, isReadonly, reactive, shallowReactive, } from "../reactive";
+import { isReactive, isReadonly, reactive, shallowReactive } from "../reactive";
 
 describe("shallowReactive", () => {
   test("should not make non-reactive properties reactive", () => {
@@ -8,20 +8,21 @@ describe("shallowReactive", () => {
     // expect(isReadonly(props)).toBe(false);
     expect(isReactive(props.n)).toBe(false);
   });
-  // it("happy path", () => {
-  //   const props = shallowReactive({ 
-  //     bar: 2, 
-  //     n: { foo: 1 } });
+  test("happy shallowReactive", () => {
+    const props = shallowReactive({
+      bar: 2,
+      n: { foo: 1 },
+    });
 
-  //   let nextAge;
-  //   effect(() => {
-  //     nextAge = props.bar + 1;
-  //   });
+    let nexProps;
+    effect(() => {
+      nexProps = props.bar + 1;
+    });
 
-  //   expect(nextAge).toBe(3);
+    expect(nexProps).toBe(3);
 
-  //    // update
-  //   props.bar = 3;   //测试不通过  暂时没想出原因
-  //   expect(nextAge).toBe(4);
-  // });
+    // update
+    props.bar++; //测试不通过  
+    expect(nexProps).toBe(4);
+  });
 });

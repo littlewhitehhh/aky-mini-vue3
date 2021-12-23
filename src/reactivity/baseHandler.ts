@@ -4,7 +4,9 @@ import { isObject } from "../shared";
 import { track, trigger } from "./effect";
 import { reactive, ReactiveFlags, readonly } from "./reactive";
 
-function createGetter(isReadonly = false, isShallowReadonly = false) {
+function createGetter(isReadonly = false, isShallow = false) {
+
+  
   return function get(target, key) {
     //专门判断isReactive
     if (key === ReactiveFlags.IS_REACTIVE) {
@@ -19,7 +21,7 @@ function createGetter(isReadonly = false, isShallowReadonly = false) {
 
     //如果是shallowReadonly类型，就不用执行内部嵌套的响应式转换。也不用执行依赖收集
 
-    if (isShallowReadonly) {
+    if (isShallow) {
       return res;
     }
 

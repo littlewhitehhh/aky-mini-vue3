@@ -5,6 +5,7 @@ import {
   shallowReactiveHandlers,
   shallowReadonlyHandlers,
 } from "./baseHandler";
+// import { track, trigger } from "./effect";
 
 /**
  * reative 和 readonly 的get和set重复代码较多，进行代码抽取重构
@@ -99,7 +100,8 @@ export function isProxy(obj) {
 //创建一个 proxy，使其自身的 property为只读，但不执行嵌套对象的深度只读转换 (暴露原始值)
 // 自身property为reactive  内部嵌套不是reactive
 export function shallowReactive(obj) {
-  return createReactiveObject(obj, shallowReactiveHandlers );
+
+  return createReactiveObject(obj, shallowReactiveHandlers);
 }
 
 //shallowReadonly
