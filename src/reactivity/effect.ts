@@ -21,7 +21,6 @@ function cleanupEffect(effect) {
 let activeEffect: any;
 let shouldTrack: boolean = false   //用于记录是否应该收集依赖，防止调用stop后触发响应式对象的property的get的依赖收集   obj.foo ++
 
-
 class ReactiveEffect {
   private _fn: any;
   deps = [];  //用于保存与当前实例相关的响应式对象的 property 对应的 Set 实例
@@ -40,16 +39,12 @@ class ReactiveEffect {
     if(!this.active){
       return this._fn()
     }
-
     //应该收集依赖
     shouldTrack = true
-
     activeEffect = this;
     const res = this._fn();
-
     //重置
     shouldTrack = false
-
     // 返回传入的函数执行的结果
     return res
   }

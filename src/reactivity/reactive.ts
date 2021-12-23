@@ -57,3 +57,28 @@ export function reactive(obj) {
 export function readonly(obj) {
   return createReactiveObject(obj, readonlyHandlers);
 }
+
+export const enum ReactiveFlags {
+  IS_REACTIVE = "__v_isReactive",
+  IS_READONLY = "__v_isReadonly",
+}
+
+//isReactive 功能
+
+export function isReactive(obj) {
+  //如何判断是一个reactive对象 ？  或者这么问？ 什么样的对象是reactive对象
+  //在设计getter的时候  传入了一个isRaedonly的参数 默认false
+  // 我们可以用 obj[is_reactive]  来调用getter函数
+  //  在getter函数中进行判断  如果 key ==="is_reactive"      return !isReadonly
+
+  //reactive对象-> getter-> key===ReactiveFlags.IS_RWACTIVE  return true -> !!rrue ->true
+  //非 reactive独享 ->不执行getter,对象业务ReactiveFlags.IS_RWACTIVE属性值 return undefined  -> !!undefined-> false
+  return !!obj[ReactiveFlags.IS_REACTIVE];
+}
+
+//isReadonly功能
+
+export function isReadonly(obj) {
+  //同理
+  return  !!obj[ReactiveFlags.IS_READONLY];
+}
