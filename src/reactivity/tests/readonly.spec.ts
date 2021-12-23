@@ -14,6 +14,9 @@ describe("readonly", () => {
     //isProxy
     expect(isProxy(wrapped)).toBe(true);
     expect(isProxy(original)).toBe(false);
+
+    //嵌套
+    expect(isReadonly(wrapped.bar)).toBe(true);
   });
 
   it("should call console.warn when set", () => {

@@ -1,7 +1,8 @@
 // reactive和readonly对象复用代码的重构
 
+import { isObject } from "../shared";
 import { track, trigger } from "./effect";
-import { ReactiveFlags } from "./reactive";
+import { reactive, ReactiveFlags, readonly } from "./reactive";
 
 function createGetter(isReadonly = false) {
   return function get(target, key) {
@@ -11,8 +12,18 @@ function createGetter(isReadonly = false) {
     }
 
     //专门判断isReadonly
-    if(key === ReactiveFlags.IS_READONLY){
-      return isReadonly
+    if (key === ReactiveFlags.IS_READONLY) {
+      return isReadonly;
+    }
+
+    const res = Reflect.get(target, key);
+
+    //reactive、readonly对象嵌套的转换
+    if (isObject(res)) {
+      //递归调用
+
+      // isReadonly == true -> 表明是readonly对象 ：是reactive对象
+      return isReadonly ? readonly(res) : reactive(res);
     }
 
     //reactive对象的getter 进行依赖收集   //readonly对象不用进行依赖收集

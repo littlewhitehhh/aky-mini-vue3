@@ -86,6 +86,6 @@ export function isReadonly(obj) {
 //isProxy
 export function isProxy(obj) {
   // 检查对象是否是由 reactive 或 readonly 创建的 proxy。
-  //也就是说满足上面isReactive和isReadonly任意一个就是proxy
+  //也就是说满足上面isReactive和isReadonly任意一个就是proxy   &&(与)  ||(或) 
   return isReadonly(obj) === true || isReactive(obj) === true;
 }

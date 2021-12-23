@@ -10,9 +10,22 @@ describe("reactive", () => {
     expect(isReactive(observed)).toBe(true);
     expect(isReactive(original)).toBe(false);
 
-
     //isProxy
     expect(isProxy(observed)).toBe(true);
     expect(isProxy(original)).toBe(false);
+  });
+
+  it("nested reactive", () => {
+    const original = {
+      nested: {
+        foo: 1,
+      },
+      arr: [{ bar: 2 }],
+    };
+    const observed = reactive(original);
+
+    expect(isReactive(observed.nested)).toBe(true);
+    expect(isReactive(observed.arr)).toBe(true);
+    expect(isReactive(observed.arr[0])).toBe(true);
   });
 });
