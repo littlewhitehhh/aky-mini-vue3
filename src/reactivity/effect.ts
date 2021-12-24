@@ -15,45 +15,47 @@ function cleanupEffect(effect) {
   effect.deps.forEach((dep: any) => {
     dep.delete(effect);
   });
+  //把 effect.deps清空
+  effect.deps.length = 0;
 }
 
 //代码优化  面向对象思想
 let activeEffect: any;
-let shouldTrack: boolean = false   //用于记录是否应该收集依赖，防止调用stop后触发响应式对象的property的get的依赖收集   obj.foo ++
+let shouldTrack: boolean = false; //用于记录是否应该收集依赖，防止调用stop后触发响应式对象的property的get的依赖收集   obj.foo ++
 
 class ReactiveEffect {
   private _fn: any;
-  deps = [];  //用于保存与当前实例相关的响应式对象的 property 对应的 Set 实例
-  active = true;   //用于记录当前实例状态，为 true 时未调用 stop 方法，否则已调用，防止重复调用 stop 方法
+  deps = []; //用于保存与当前实例相关的响应式对象的 property 对应的 Set 实例
+  active = true; //用于记录当前实例状态，为 true 时未调用 stop 方法，否则已调用，防止重复调用 stop 方法
   scheduler?: () => void;
   onStop?: () => void;
   constructor(fn, option) {
     this._fn = fn;
     this.scheduler = option?.scheduler;
-    this.onStop = option?.onStop
+    this.onStop = option?.onStop;
     // this.deps = [];
     // this.active = true;
   }
   //用于执行传入的函数
   run() {
-    if(!this.active){
-      return this._fn()
+    if (!this.active) {
+      return this._fn();
     }
     //应该收集依赖
-    shouldTrack = true
+    shouldTrack = true;
     activeEffect = this;
     const res = this._fn();
     //重置
-    shouldTrack = false
+    shouldTrack = false;
     // 返回传入的函数执行的结果
-    return res
+    return res;
   }
   stop() {
     //删除effect
     if (this.active) {
       cleanupEffect(this);
-      if(this.onStop){
-        this.onStop()
+      if (this.onStop) {
+        this.onStop();
       }
       this.active = false;
     }
@@ -63,7 +65,7 @@ class ReactiveEffect {
 //effect函数
 export function effect(fn, option: any = {}) {
   const _effect = new ReactiveEffect(fn, option);
-  // Object.assign(_effect, option);
+  Object.assign(_effect, option);
 
   _effect.run();
 
@@ -79,14 +81,11 @@ export function stop(runner) {
 const targetMap = new WeakMap();
 // 进行依赖收集track
 export function track(target, key) {
-    console.log("收集收集依赖了");
-    
-
-   // 若不应该收集依赖则直接返回
-   if (!shouldTrack || activeEffect === undefined) {
-    return
-  }
-
+  // 若不应该收集依赖则直接返回
+  // if (!shouldTrack || activeEffect === undefined) {
+  //   return;
+  // }
+  if (!isTracking()) return;
   //1、先获取到key的依赖集合dep
   //所有对象的的以来集合targetMap -> 当前对象的依赖集合objMap -> 当前key的依赖集合
   let objMap = targetMap.get(target);
@@ -102,23 +101,48 @@ export function track(target, key) {
     objMap.set(key, dep);
   }
   //d将依赖函数添加给dep
-  
+
   // if (!activeEffect) return;
-  dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
-  activeEffect?.deps.push(dep); //?
-  console.log(dep);
-  
+  // if(dep.has(activeEffect)) return
+  // dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
+  // activeEffect?.deps.push(dep); //?
+
+  trackEffect(dep);
+}
+
+//重构
+export function trackEffect(dep) {
+  //看看dep之前有没有添加过，添加过的话 就不添加了
+  if (dep.has(activeEffect)) return;
+  dep.add(activeEffect);
+  activeEffect.deps.push(dep);
+}
+
+export function isTracking() {
+  return shouldTrack && activeEffect !== undefined;
 }
 //触发依赖trigger
 export function trigger(target, key) {
-  console.log("触发依赖了");
+  // console.log("触发依赖了");
 
   //1、先获取到key的依赖集合dep
   let objMap = targetMap.get(target);
-  console.log(objMap);
-  
+  // console.log(objMap);
+
   let dep = objMap.get(key);
   //去执行dep里面的函数
+  // dep.forEach((effect) => {
+  //   if (effect.scheduler) {
+  //     effect.scheduler();
+  //   } else {
+  //     effect.run();
+  //   }
+  // });
+  triggerEffect(dep);
+}
+
+// 重构
+export function triggerEffect(dep) {
   dep.forEach((effect) => {
     if (effect.scheduler) {
       effect.scheduler();
