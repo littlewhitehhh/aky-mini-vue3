@@ -1,6 +1,6 @@
 // reactive和readonly对象复用代码的重构
 
-import { isObject } from "../shared";
+import { isObject } from "../shared/index";
 import { track, trigger } from "./effect";
 import { reactive, ReactiveFlags, readonly } from "./reactive";
 
