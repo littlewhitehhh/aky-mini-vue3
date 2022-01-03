@@ -39,18 +39,27 @@ function mountElement(vnode: any, container: any) {
   const { props } = vnode;
   for (const key in props) {
     const val = props[key];
-    el.setAttribute(key, val);
+    console.log(key);
+    // const isOn = (key) => /^on[A-Z]/.test(key);
+    // if(isOn(key)){
+    if (key.startsWith("on")) {
+      // console.log(key.split("on")[1]);
+      const event = key.slice(2).toLowerCase();
+      el.addEventListener(event, val);
+    } else {
+      el.setAttribute(key, val);
+    }
   }
 
   // el.textContent = "hi mini-vue";
   const { children, shapeFlag } = vnode;
 
   if (shapeFlag & shapeFlags.text_children) {
-  // if (typeof children === "string") {
+    // if (typeof children === "string") {
     //children为srting类型
     el.textContent = children;
-  // } else if (Array.isArray(children)) {
-    } else if (shapeFlag & shapeFlags.array_children) {
+    // } else if (Array.isArray(children)) {
+  } else if (shapeFlag & shapeFlags.array_children) {
     //children 是数组类型
     // children.forEach((v) => {
     //   patch(v, el);

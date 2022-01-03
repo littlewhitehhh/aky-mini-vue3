@@ -1,4 +1,5 @@
 // import { track, trigger } from "./effect";
+import { isObject } from "../shared/index";
 import {
   mutableHandlers,
   readonlyHandlers,
@@ -13,8 +14,12 @@ import {
  */
 
 // 工具函数
-function createReactiveObject(obj, baseHandler) {
-  return new Proxy(obj, baseHandler);
+function createReactiveObject(target, baseHandler) {
+  if (!isObject(target)) {
+    console.warn(`target${target}必须是一个对象`);
+    return target;
+  }
+  return new Proxy(target, baseHandler);
 }
 
 //reactive函数
@@ -100,7 +105,6 @@ export function isProxy(obj) {
 //创建一个 proxy，使其自身的 property为只读，但不执行嵌套对象的深度只读转换 (暴露原始值)
 // 自身property为reactive  内部嵌套不是reactive
 export function shallowReactive(obj) {
-
   return createReactiveObject(obj, shallowReactiveHandlers);
 }
 
