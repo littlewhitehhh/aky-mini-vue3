@@ -1,3 +1,6 @@
+//effect 第一个参数接受一个函数
+//ReactiveEffect类 （抽离的一个概念）  ------>面向对象思维
+
 /**
  * 不给activeEffect添加类型， 单测会报错
  * 所以进行了代码优化
@@ -63,11 +66,14 @@ export class ReactiveEffect {
 }
 
 //effect函数
+/**
+ * param fn 参数函数
+ */
 export function effect(fn, option: any = {}) {
   const _effect = new ReactiveEffect(fn, option);
   Object.assign(_effect, option);
 
-  _effect.run();
+  _effect.run(); //实际上是调用执行了fn函数
 
   const runner: any = _effect.run.bind(_effect); //直接调用runnner
   runner.effect = _effect;
@@ -104,8 +110,8 @@ export function track(target, key) {
 
   // if (!activeEffect) return;
   // if(dep.has(activeEffect)) return
-  // dep.add(activeEffect); //? 怎么获取到fn?  添加一个全局变量activeEffect
-  // activeEffect?.deps.push(dep); //?
+  // dep.add(activeEffect); ? 怎么获取到fn?  添加一个全局变量activeEffect
+  // activeEffect?.deps.push(dep); ?
 
   trackEffect(dep);
 }
@@ -118,9 +124,12 @@ export function trackEffect(dep) {
   activeEffect.deps.push(dep);
 }
 
+//activeEffect可能为undefined 原因： 访问一个单纯的reactive对象，没有任何依赖的时候 activeEffect可能为undefined
 export function isTracking() {
   return shouldTrack && activeEffect !== undefined;
 }
+console.log(targetMap.has(effect));
+
 //触发依赖trigger
 export function trigger(target, key) {
   // console.log("触发依赖了");
@@ -130,6 +139,8 @@ export function trigger(target, key) {
   // console.log(objMap);
 
   let dep = objMap.get(key);
+  console.log(objMap);
+
   //去执行dep里面的函数
   // dep.forEach((effect) => {
   //   if (effect.scheduler) {

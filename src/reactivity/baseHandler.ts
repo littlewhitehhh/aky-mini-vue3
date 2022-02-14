@@ -5,6 +5,7 @@ import { track, trigger } from "./effect";
 import { reactive, ReactiveFlags, readonly } from "./reactive";
 
 function createGetter(isReadonly = false, isShallow = false) {
+  //true
   return function get(target, key) {
     //专门判断isReactive
     if (key === ReactiveFlags.IS_REACTIVE) {
@@ -34,7 +35,7 @@ function createGetter(isReadonly = false, isShallow = false) {
 }
 
 function createSetter() {
-  //只有reactive对象能够diaoyongsetter
+  //只有reactive对象能够调用setter
   return function set(target, key, newVal) {
     const res = Reflect.set(target, key, newVal);
     //触发依赖
@@ -58,11 +59,7 @@ const readonlyGetter = createGetter(true);
 export const readonlyHandlers = {
   get: readonlyGetter,
   set: function (target, key, newVal) {
-    console.warn(
-      `key :"${String(key)}" set 失败，因为 target 是 readonly 类型`,
-      target,
-      newVal
-    );
+    console.warn(`key :"${String(key)}" set 失败，因为 target 是 readonly 类型`, target, newVal);
     return true;
   },
 };
@@ -70,20 +67,20 @@ export const readonlyHandlers = {
 const shallowReactiveGetter = createGetter(false, true);
 // const shallowReactiveSetter = createSetter();
 
-export const shallowReactiveHandlers = Object.assign({}, mutableHandlers, {
+// export const shallowReactiveHandlers = Object.assign({}, mutableHandlers, {
+//   get: shallowReactiveGetter,
+// });
+export const shallowReactiveHandlers = {
   get: shallowReactiveGetter,
-});
+  set,
+};
 
 const shallowReadonlyGetter = createGetter(true, true);
 
 export const shallowReadonlyHandlers = {
   get: shallowReadonlyGetter,
   set: function (target, key, newVal) {
-    console.warn(
-      `key :"${String(key)}" set 失败，因为 target 是 readonly 类型`,
-      target,
-      newVal
-    );
+    console.warn(`key :"${String(key)}" set 失败，因为 target 是 readonly 类型`, target, newVal);
     return true;
   },
 };

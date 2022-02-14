@@ -5,7 +5,7 @@
 //   return refObj;
 // }
 
-import { isObject } from "../shared";
+import { isObject } from "../shared/index";
 import { isTracking, trackEffect, triggerEffect } from "./effect";
 import { reactive } from "./reactive";
 
@@ -33,10 +33,10 @@ class RefImpl {
   set value(val) {
     //如果value是reactive对象的时候  this._value 为Proxy
     // 提前声明一个this._rawValue 来存储并进行比较
-    if (Object.is(val, this._rawValue)) return;
+    if (Object.is(val, this._rawValue)) return; //  ref.value = 2   ref.value = 2   两次赋值相同值的操作  不会执行effect
     this._rawValue = val;
     // this._value = isObject(val) ? reactive(val) : val;
-    this._value = convert(val);
+    this._value = convert(val); //处理值  如果是对象 ->转为reactive对象  不是对象 返回原值
     triggerEffect(this.dep);
   }
 }
@@ -59,9 +59,9 @@ export function unRef(val) {
   return isRef(val) ? val.value : val;
 }
 
-//proxyRef     应用场景： temelate中使用setup中return的ref  不需要使用ref.value
+//proxyRef     应用场景： template中使用setup中return的ref  不需要使用ref.value
 
-export function proxyRef(objectWithRefs) {
+export function proxyRefs(objectWithRefs) {
   //怎么知道调用getter 和setter ？  ->proxy
   return new Proxy(objectWithRefs, {
     get(target, key) {

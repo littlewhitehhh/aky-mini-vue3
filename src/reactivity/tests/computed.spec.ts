@@ -4,7 +4,7 @@ import { reactive } from "../reactive";
 describe("computed", () => {
   it("happy path", () => {
     //ref
-    //.valu
+    //.value
     //1.缓存
     const user = reactive({
       age: 1,

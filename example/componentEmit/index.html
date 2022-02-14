@@ -7,10 +7,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    #app {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 50px;
+    }
+    
+    .text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 
 <body>
-    <div id="app"></div>
+
+    <div id="app">
+    </div>
+
+
+    <div class="text">
+        <span>16541684513265413<br/>5236451320645132</span>
+    </div>
     <script src="./main.js" type="module"></script>
+
+    <script>
+        class Person {
+            storage = localStorage || window.localStorage
+            status = {
+                success: "SUCCESS",
+
+            }
+            constructor(name) {
+                this.name = name
+            }
+
+            set() {
+                Person.get()
+            }
+            static get() {
+                console.log(11);
+            }
+        }
+
+        let p = new Person("haha")
+        console.log(p);
+    </script>
+    <img src="" alt="">
 </body>
 
 </html>

@@ -3,7 +3,7 @@ import { ReactiveEffect } from "./effect";
 //computed 的类实现
 class computedRefIpml {
   private _fn: any;
-  private _drity: boolean = true;
+  private _dirty: boolean = true;
   private _value: any;
   private _effect: ReactiveEffect;
 
@@ -12,16 +12,16 @@ class computedRefIpml {
 
     this._effect = new ReactiveEffect(fn, {
       scheduler: () => {
-        if (!this._drity) {
-          this._drity = true;
+        if (!this._dirty) {
+          this._dirty = true;
         }
       },
     });
   }
 
   get value() {
-    if (this._drity) {
-      this._drity = false;
+    if (this._dirty) {
+      this._dirty = false;
       // this._value = this._fn();
       this._value = this._effect.run();
     }

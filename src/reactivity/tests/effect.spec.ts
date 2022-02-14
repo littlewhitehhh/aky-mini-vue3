@@ -19,7 +19,7 @@ describe("effect", () => {
     expect(nextAge).toBe(12);
   });
   it("should return runner when call effect", () => {
-    // 1、调用effect(fn) 会返回一个runner函数 -> 调用runner() 会再次调用fn -> 调用fn后会返回fn的返回值
+    // 1、调用effect(fn) 会返回一个runner函数 -> 调用runner() 会再次调用fn -> 返回fn的返回值
 
     let foo = 0;
     const runner = effect(() => {
@@ -56,7 +56,7 @@ describe("effect", () => {
 
     //should be called on first trigger
     obj.foo++;
-    expect(scheduler).toHaveBeenCalledTimes(1);  // scheduler被调用了一次
+    expect(scheduler).toHaveBeenCalledTimes(1); // scheduler被调用了一次
     //should not run yet
     expect(dummy).toBe(1);
     //manually run
@@ -81,8 +81,8 @@ describe("effect", () => {
     stop(runner); //
     obj.prop = 3;
     expect(dummy).toBe(2);
-    obj.prop ++ 
-    expect(dummy).toBe(2)
+    obj.prop++;
+    expect(dummy).toBe(2);
     runner();
     expect(dummy).toBe(4);
   });

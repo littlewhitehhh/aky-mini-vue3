@@ -82,19 +82,19 @@ function processComponent(vnode: any, container: any) {
   mountComponent(vnode, container);
 }
 
-function mountComponent(initinalVNode: any, container) {
-  const instance = createComponentInstance(initinalVNode);
+function mountComponent(initialVNode: any, container) {
+  const instance = createComponentInstance(initialVNode);
 
   setupComponent(instance);
-  setupRenderEffect(instance, initinalVNode, container);
+  setupRenderEffect(instance, initialVNode, container);
 }
 
-function setupRenderEffect(instance: any, initinalVNode, container) {
+function setupRenderEffect(instance: any, initialVNode, container) {
   const { proxy } = instance;
   const subTree = instance.render.call(proxy);
 
   patch(subTree, container);
 
   //element ->mount
-  initinalVNode.el = subTree.el;
+  initialVNode.el = subTree.el;
 }

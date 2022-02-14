@@ -7,7 +7,7 @@ export function createComponentInstance(vnode) {
   const component = {
     vnode,
     type: vnode.type,
-    setupState: {},
+    setupState: {}, //记录setup函数执行后返回的结果
     props: {},
     emit: () => {},
   };
@@ -27,7 +27,10 @@ function setupStatefulComponent(instance: any) {
 
   //增加了代理对象
   //cxt
-  instance.proxy = new Proxy(
+  debugger;
+  console.log({ _: instance });
+
+  instance.proxy = new Proxy( //增加了代理对象
     { _: instance },
 
     // get(target, key) {
