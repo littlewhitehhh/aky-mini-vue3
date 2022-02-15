@@ -1,6 +1,7 @@
 import { isObject } from "../shared/index";
 import { shapeFlags } from "../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
+import { Fragment, Text } from "./vnode";
 
 export function render(vnode, container) {
   // debugger;
@@ -13,17 +14,37 @@ function patch(vnode, container) {
   //如何去区分是element类型和component类型      ：vnode.type 来判断
   // console.log(vnode.type);
 
-  const { shapeFlag } = vnode;
+  const { type, shapeFlag } = vnode;
 
-  if (shapeFlag & shapeFlags.element) {
-    // if (typeof vnode.type === "string") {
-    // element类型
-    processElement(vnode, container);
-    // } else if (isObject(vnode.type)) {
-  } else if (shapeFlag & shapeFlags.stateful_component) {
-    // component类型
-    processComponent(vnode, container);
+  //Fragment -> 只渲染children
+  switch (type) {
+    case Fragment:
+      processFragment(vnode, container);
+      break;
+    case Text:
+      processText(vnode, container);
+      break;
+    default:
+      if (shapeFlag & shapeFlags.element) {
+        // if (typeof vnode.type === "string") {
+        // element类型
+        processElement(vnode, container);
+        // } else if (isObject(vnode.type)) {
+      } else if (shapeFlag & shapeFlags.stateful_component) {
+        // component类型
+        processComponent(vnode, container);
+      }
   }
+}
+
+function processFragment(vnode: any, container: any) {
+  mountChildren(vnode, container);
+}
+
+function processText(vnode: any, container: any) {
+  const { children } = vnode;
+  const textNode = (vnode.el = document.createTextNode(children));
+  container.appendChild(textNode);
 }
 //element vnode.type为element类型
 function processElement(vnode, container) {
