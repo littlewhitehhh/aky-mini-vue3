@@ -11,7 +11,7 @@ export function emit(instance, event, ...args) {
 
   // const handler = props["onAdd"];
 
-  // //add-foo ->addFoo
+  //add-foo ->addFoo
   // const camelize = (str: string) => {
   //   return str.replace(/-(\w)/g, (_, c: string) => {
   //     return c ? c.toUpperCase() : "";
@@ -21,10 +21,10 @@ export function emit(instance, event, ...args) {
   // const capitalize = (str: string) => {
   //   return str.charAt(0).toUpperCase() + str.slice(1);
   // };
-  // // console.log(capitalize(event));
+  // console.log(capitalize(event));
 
   // const str = capitalize(camelize(event));
-  // // AddFoo -> toAddFoo
+  // AddFoo -> toAddFoo
   // const toHandlerKey = (str: string) => {
   //   return str ? "on" + str : "";
   // };

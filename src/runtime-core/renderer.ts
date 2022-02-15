@@ -3,6 +3,7 @@ import { shapeFlags } from "../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 
 export function render(vnode, container) {
+  // debugger;
   patch(vnode, container);
 }
 

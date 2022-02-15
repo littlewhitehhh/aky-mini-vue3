@@ -1,3 +1,4 @@
+import { isObject } from "../shared/index";
 import { shapeFlags } from "../shared/shapeFlags";
 
 export function createVNode(type, props?, children?) {
@@ -14,11 +15,17 @@ export function createVNode(type, props?, children?) {
   } else if (Array.isArray(children)) {
     vnode.shapeFlag = vnode.shapeFlag | shapeFlags.array_children;
   }
+
+  // 组件 + children 为object类型
+  if (vnode.shapeFlag & shapeFlags.stateful_component) {
+    if (isObject(children)) {
+      vnode.shapeFlag = vnode.shapeFlag | shapeFlags.slot_children;
+    }
+  }
+
   return vnode;
 }
 
 function getShapeFlag(type) {
-  return typeof type === "string"
-    ? shapeFlags.element
-    : shapeFlags.stateful_component;
+  return typeof type === "string" ? shapeFlags.element : shapeFlags.stateful_component;
 }
