@@ -46,8 +46,10 @@ export class ReactiveEffect {
     }
     //应该收集依赖
     shouldTrack = true;
+
     activeEffect = this;
     const res = this._fn();
+
     //重置
     shouldTrack = false;
     // 返回传入的函数执行的结果
