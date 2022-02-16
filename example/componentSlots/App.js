@@ -29,7 +29,7 @@ export const App = {
                 // header: ({ age }) => h("p", {}, "header" + age),
                 header: ({ age }) => h("p", {}, "header" + age),
 
-                footer: () => [h("p", {}, "footer"), createTextVnode("你好呀！")],
+                // footer: () => [h("p", {}, "footer"), createTextVnode("你好呀！")],
             }
         );
         return h("div", {}, [app, foo]);
