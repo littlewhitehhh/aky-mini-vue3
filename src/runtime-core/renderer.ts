@@ -19,9 +19,6 @@ export function createRenderer(options) {
    * @param n2 新的vnode
    * @param container  容器
    * @param parentComponent 父组件
-   *
-   *
-   *
    */
 
   function patch(n1, n2, container, parentComponent) {
@@ -67,7 +64,7 @@ export function createRenderer(options) {
   function processElement(n1, n2, container, parentComponent) {
     //init 初始化
     if (!n1) {
-      mountElement(n1, n2, container, parentComponent);
+      mountElement(n2, container, parentComponent);
     } else {
       //TODO UPDATE
       console.log("patchElement");
@@ -76,7 +73,7 @@ export function createRenderer(options) {
     }
   }
 
-  function mountElement(n1: any, n2: any, container: any, parentComponent) {
+  function mountElement(vnode: any, container: any, parentComponent) {
     //跨平台渲染
     //canvas
     // new Element()
@@ -84,11 +81,11 @@ export function createRenderer(options) {
     //Dom平台
     // const el = document.createElement("div")
     // const el = (n2.el = document.createElement(n2.type));
-    const el = (n2.el = hostCreateElement(n2.type));
+    const el = (vnode.el = hostCreateElement(vnode.type));
 
     //props
     // el.setttribute("id", "root");
-    const { props } = n2;
+    const { props } = vnode;
     for (const key in props) {
       const val = props[key];
       console.log(key);
@@ -102,13 +99,13 @@ export function createRenderer(options) {
       //   el.setAttribute(key, val);
       // }
 
-      hostPatchProp(el, key, val);
+      hostPatchProp(el, key, null, val);
     }
 
     //children
 
     // el.textContent = "hi mini-vue";
-    const { children, shapeFlag } = n2;
+    const { children, shapeFlag } = vnode;
 
     if (shapeFlag & shapeFlags.text_children) {
       // if (typeof children === "string") {
@@ -120,7 +117,7 @@ export function createRenderer(options) {
       // children.forEach((v) => {
       //   patch(v, el);
       // });
-      mountChildren(children, el, parentComponent);
+      mountChildren(vnode, el, parentComponent);
     }
 
     //挂载要渲染的el
@@ -131,7 +128,7 @@ export function createRenderer(options) {
     hostInsert(el, container);
   }
   function mountChildren(childrenVnode, container, parentComponent) {
-    childrenVnode.forEach((v) => {
+    childrenVnode.children.forEach((v) => {
       patch(null, v, container, parentComponent);
     });
   }
@@ -143,19 +140,26 @@ export function createRenderer(options) {
     //props
     const oldProps = n1.props || {};
     const newProps = n2.props || {};
-
-    patchProps(oldProps, newProps);
+    const el = (n2.el = n1.el);
+    patchProps(el, oldProps, newProps);
     //1、key不变 value 改变
     //2、 value= undefined 、null ==>  删除key
     //3、 老的vnode 里的key 在新的element vnode不存在了   ==> 删除
     // children
   }
 
-  function patchProps(oldProps, newProps) {
+  function patchProps(el, oldProps, newProps) {
     for (const key in newProps) {
       const prevProps = oldProps[key];
       const nextProps = newProps[key];
-      if (prevProps !== newProps) {
+      if (prevProps !== nextProps) {
+        hostPatchProp(el, key, prevProps, nextProps);
+      }
+    }
+
+    for (const key in newProps) {
+      if (!(key in newProps)) {
+        hostPatchProp(el, key, oldProps[key], null);
       }
     }
   }

@@ -6,7 +6,7 @@ export const App = {
     render() {
         // window.self = this;
         // console.log(this.count);   // count refImpl对象        count
-        return h("div", { id: "root" }, [
+        return h("div", { id: "root", ...this.props }, [
             h("button", { onClick: this.onClick }, "click"),
             h("div", {}, "count" + this.count), //  render函数当作依赖，用effect包裹 ==》触发render==》 依赖收集
 
