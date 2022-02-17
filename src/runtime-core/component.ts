@@ -1,3 +1,4 @@
+import { proxyRefs } from "../index";
 import { shallowReadonly } from "../reactivity/reactive";
 import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
@@ -14,6 +15,8 @@ export function createComponentInstance(vnode, parent) {
     provides: parent ? parent.provides : {},
     parent,
     emit: () => {},
+    isMounted: false,
+    subTree: {},
   };
   component.emit = emit.bind(null, component) as any;
   return component;
@@ -76,7 +79,7 @@ function handleSetupResult(instance, setupResult: any) {
   // function Object
   // TODO function
   if (typeof setupResult === "object") {
-    instance.setupState = setupResult;
+    instance.setupState = proxyRefs(setupResult); //setup返回值的ref对象 直接key访问，不用key.value
   }
 
   finishComponentSetup(instance);
