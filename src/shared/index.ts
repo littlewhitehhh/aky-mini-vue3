@@ -1,11 +1,12 @@
 export const extend = Object.assign;
 
+export const EMPTY_OBJ = {};
+
 export function isObject(val) {
   return val !== null && typeof val === "object";
 }
 
-export const hasOwn = (val, key) =>
-  Object.prototype.hasOwnProperty.call(val, key);
+export const hasOwn = (val, key) => Object.prototype.hasOwnProperty.call(val, key);
 
 //add-foo ->addFoo
 export const camelize = (str: string) => {
