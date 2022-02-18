@@ -6,7 +6,13 @@ import { createAppAPI } from "./createApp";
 import { Fragment, Text } from "./vnode";
 
 export function createRenderer(options) {
-  const { createElement: hostCreateElement, patchProp: hostPatchProp, insert: hostInsert } = options;
+  const {
+    createElement: hostCreateElement,
+    patchProp: hostPatchProp,
+    insert: hostInsert,
+    remove: hostRemove,
+    setElementText: hostSetElementText,
+  } = options;
 
   function render(vnode, container) {
     // debugger;
@@ -69,7 +75,7 @@ export function createRenderer(options) {
       //TODO UPDATE
       console.log("patchElement");
 
-      patchElement(n1, n2, container);
+      patchElement(n1, n2, container, parentComponent);
     }
   }
 
@@ -133,7 +139,7 @@ export function createRenderer(options) {
     });
   }
 
-  function patchElement(n1, n2, container) {
+  function patchElement(n1, n2, container, parentComponent) {
     console.log("n1:", n1);
     console.log("n2:", n2);
     //type
@@ -146,11 +152,13 @@ export function createRenderer(options) {
     //2、 value= undefined 、null ==>  删除key
     //3、 老的vnode 里的key 在新的element vnode不存在了   ==> 删除
     // children
+
+    patchChildren(n1, n2, el, parentComponent);
   }
 
   // const EMPTY_OBJ = {}
   function patchProps(el, oldProps, newProps) {
-    debugger;
+    // debugger;
     if (oldProps !== newProps) {
       for (const key in newProps) {
         const prevProp = oldProps[key];
@@ -171,6 +179,47 @@ export function createRenderer(options) {
     }
   }
 
+  function patchChildren(n1, n2, container, parentComponent) {
+    // ArrayToText
+    //判断新节点的shapeFlag  判断 children是text还是array
+    const prevShapeFlag = n1.shapeFlag;
+    const { shapeFlag } = n2;
+    const c1 = n1.children;
+    const c2 = n2.children;
+    if (shapeFlag & shapeFlags.text_children) {
+      //新节点children为 text类型
+      if (prevShapeFlag & shapeFlags.array_children) {
+        //老节点children 为array类型
+        //1、把老节点清空
+        unmountedChildren(n1.children);
+        //2、设置text
+        hostSetElementText(container, c2);
+      } else {
+        //老节点children为 text类型
+        if (c1 !== c2) {
+          //设置text
+          hostSetElementText(container, c2);
+        }
+      }
+    } else {
+      //新节点children为 array类型
+      if (prevShapeFlag & shapeFlags.text_children) {
+        //老节点children为text
+        // 1、清空老节点
+        hostSetElementText(container, "");
+        // 2、设置新节点
+        mountChildren(n2, container, parentComponent);
+      }
+    }
+  }
+
+  function unmountedChildren(children) {
+    for (let i = 0; i < children.length; i++) {
+      const el = children[i].el;
+      //remove
+      hostRemove(el);
+    }
+  }
   //componentvnode.type为component类型
   function processComponent(n1, n2: any, container: any, parentComponent) {
     mountComponent(n1, n2, container, parentComponent);
