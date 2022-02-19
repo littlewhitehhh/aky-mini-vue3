@@ -79,6 +79,7 @@ export function createRenderer(options) {
     }
   }
 
+  //挂载element
   function mountElement(vnode: any, container: any, parentComponent) {
     //跨平台渲染
     //canvas
@@ -139,18 +140,22 @@ export function createRenderer(options) {
     });
   }
 
+  //更新element
   function patchElement(n1, n2, container, parentComponent) {
     console.log("n1:", n1);
     console.log("n2:", n2);
     //type
+
     //props
     const oldProps = n1.props || EMPTY_OBJ;
-    const newProps = n2.props || {};
+    const newProps = n2.props || EMPTY_OBJ;
     const el = (n2.el = n1.el);
-    patchProps(el, oldProps, newProps);
+
     //1、key不变 value 改变
     //2、 value= undefined 、null ==>  删除key
     //3、 老的vnode 里的key 在新的element vnode不存在了   ==> 删除
+    patchProps(el, oldProps, newProps);
+
     // children
 
     patchChildren(n1, n2, el, parentComponent);
@@ -209,6 +214,9 @@ export function createRenderer(options) {
         hostSetElementText(container, "");
         // 2、设置新节点
         mountChildren(n2, container, parentComponent);
+      } else {
+        //老节点children 为array类型
+        patchKeyChildren(c1, c2);
       }
     }
   }
@@ -220,11 +228,28 @@ export function createRenderer(options) {
       hostRemove(el);
     }
   }
+
+  function patchKeyChildren(c1, c2) {
+    let i = 0;
+    let e1 = c1.length - 1;
+    let e2 = c2.length - 2;
+
+    while (i <= e1 && i <= e2) {
+      const n1 = c1[i];
+      const n2 = c2[i];
+
+      // if(isSoneVnodeType(n1,n2)){
+
+      //   pa
+      // }
+    }
+  }
   //componentvnode.type为component类型
   function processComponent(n1, n2: any, container: any, parentComponent) {
     mountComponent(n1, n2, container, parentComponent);
   }
 
+  //组件初始化
   function mountComponent(n1, initialVNode: any, container, parentComponent) {
     const instance = createComponentInstance(initialVNode, parentComponent);
 
