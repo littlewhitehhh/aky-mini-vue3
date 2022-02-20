@@ -11,9 +11,11 @@ describe("effect", () => {
     effect(() => {
       nextAge = user.age + 1;
     });
+    // effect(() => {
+    //   user.age++;
+    // });
 
     expect(nextAge).toBe(11);
-
     // update
     user.age++;
     expect(nextAge).toBe(12);

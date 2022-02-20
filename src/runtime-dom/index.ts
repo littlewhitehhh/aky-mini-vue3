@@ -33,12 +33,16 @@ function patchProp(el, key, prevVal, nextVal) {
     }
   }
 }
-function insert(el, parent) {
-  parent.append(el);
+function insert(child, parent, anchor) {
+  //只是添加到后面
+  // parent.append(child);
+
+  // 添加到指定位置
+  parent.insertBefore(child, anchor || null);
 }
 
 function remove(child) {
-  const parent = child.parent;
+  const parent = child.parentNode;
   if (parent) {
     parent.removeChild(child);
   }

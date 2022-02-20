@@ -8,27 +8,48 @@ import { h, ref } from "../../lib/mini-vue.esm.js";
 // (a b) c
 //(a,b) d e
 
-const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B"), h("p", { key: "C" }, "C")];
-
-const nextChildren = [
-    h("p", { key: "A" }, "A"),
-    h("p", { key: "B" }, "B"),
-    h("p", { key: "D" }, "D"),
-    h("p", { key: "E" }, "E"),
-];
-
-// const prevChildren = [
-
-//   h("p",{key:"A"},"A"),
-//   h("p",{key:"B"},"B"),
-//   h("p",{key:"C"},"C"),
-// ]
+// const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B"), h("p", { key: "C" }, "C")];
 
 // const nextChildren = [
+//     h("p", { key: "A" }, "A"),
+//     h("p", { key: "B" }, "B"),
+//     h("p", { key: "D" }, "D"),
+//     h("p", { key: "E" }, "E"),
+// ];
 
-//   h("p",{key:B},"B"),
-//   h("p", { key: "C" }, "C")
-// ]
+//2、右侧对比
+// a (b c)
+//d e (b c)
+// const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B"), h("p", { key: "C" }, "C")];
+// const nextChildren = [
+//     h("p", { key: "D" }, "D"),
+//     h("p", { key: "E" }, "E"),
+//     h("p", { key: "B" }, "B"),
+//     h("p", { key: "C" }, "C"),
+// ];
+
+//3、新的比老的长
+//(a b)
+//(a b) c
+// const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
+// const nextChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B"), h("p", { key: "C" }, "C")];
+
+//(a b)
+//c (a b)
+// const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
+// const nextChildren = [h("p", { key: "C" }, "C"), h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
+
+//4、老的比新的长
+//(a b) c
+//(a b)
+// const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B"), h("p", { key: "C" }, "C")];
+// const nextChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
+
+//c (a b)
+//(a b)
+
+const prevChildren = [h("p", { key: "C" }, "C"), h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
+const nextChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
 
 export default {
     name: "ArrayToArray",
