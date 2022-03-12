@@ -104,4 +104,21 @@ describe("effect", () => {
     stop(runner);
     expect(onStop).toBeCalledTimes(1);
   });
+
+  it("cleanup effect", () => {
+    let dummy;
+    let record;
+    const obj = reactive({ prop: 1, foo: 2 });
+    const runner = effect(() => {
+      dummy = obj.prop;
+      record = obj.foo;
+    });
+    expect(dummy).toBe(1);
+    expect(record).toBe(2);
+    stop(runner);
+    //should not trigger effect
+    obj.foo = 3;
+    expect(dummy).toBe(1);
+    expect(record).toBe(2);
+  });
 });

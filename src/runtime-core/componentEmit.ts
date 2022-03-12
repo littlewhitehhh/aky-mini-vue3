@@ -24,7 +24,7 @@ export function emit(instance, event, ...args) {
   // console.log(capitalize(event));
 
   // const str = capitalize(camelize(event));
-  // AddFoo -> toAddFoo
+  // AddFoo -> noAddFoo
   // const toHandlerKey = (str: string) => {
   //   return str ? "on" + str : "";
   // };

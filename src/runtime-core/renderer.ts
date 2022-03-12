@@ -15,7 +15,7 @@ export function createRenderer(options) {
   } = options;
 
   function render(vnode, container) {
-    // debugger;
+    debugger;
     patch(null, vnode, container, null, null);
   }
 
@@ -414,7 +414,7 @@ export function createRenderer(options) {
   };
 }
 
-//最强递增子序列
+//最长递增子序列
 function getSequence(arr) {
   const p = arr.slice();
   const result = [0];

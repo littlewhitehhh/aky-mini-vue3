@@ -1,6 +1,8 @@
 //effect 第一个参数接受一个函数
 //ReactiveEffect类 （抽离的一个概念）  ------>面向对象思维
 
+import { extend } from "../shared";
+
 /**
  * 不给activeEffect添加类型， 单测会报错
  * 所以进行了代码优化
@@ -69,13 +71,20 @@ export class ReactiveEffect {
 
 //effect函数
 /**
- * param fn 参数函数
+ * @param fn 参数函数
  */
 export function effect(fn, option: any = {}) {
   const _effect = new ReactiveEffect(fn, option);
-  Object.assign(_effect, option);
+  // Object.assign(_effect, option);
 
-  _effect.run(); //实际上是调用执行了fn函数
+  if (option) {
+    extend(_effect, option);
+  }
+  if (!option || !option.lazy) {
+    _effect.run();
+  }
+
+  // _effect.run(); //实际上是调用执行了fn函数
 
   const runner: any = _effect.run.bind(_effect); //直接调用runnner
   runner.effect = _effect;
