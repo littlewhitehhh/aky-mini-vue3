@@ -74,11 +74,11 @@ export class ReactiveEffect {
  * @param fn 参数函数
  */
 export function effect(fn, option: any = {}) {
-  const _effect = new ReactiveEffect(fn, option);
+  const _effect: ReactiveEffect = new ReactiveEffect(fn, option);
   // Object.assign(_effect, option);
 
   if (option) {
-    extend(_effect, option);
+    extend(_effect, option); //what this？
   }
   if (!option || !option.lazy) {
     _effect.run();
