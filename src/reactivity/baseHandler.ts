@@ -16,6 +16,12 @@ function createGetter(isReadonly = false, isShallow = false) {
       return isReadonly;
     }
     const res = Reflect.get(target, key);
+
+    //reactive对象的getter 进行依赖收集   //readonly对象不用进行依赖收集
+    if (!isReadonly) {
+      track(target, key);
+    }
+
     //如果是shallowReadonly类型，就不用执行内部嵌套的响应式转换。也不用执行依赖收集
     if (isShallow) {
       return res;
@@ -26,11 +32,7 @@ function createGetter(isReadonly = false, isShallow = false) {
       // isReadonly == true -> 表明是readonly对象 ：是reactive对象
       return isReadonly ? readonly(res) : reactive(res);
     }
-    //reactive对象的getter 进行依赖收集   //readonly对象不用进行依赖收集
-    if (!isReadonly) {
-      track(target, key);
-    }
-    return Reflect.get(target, key);
+    return res;
   };
 }
 

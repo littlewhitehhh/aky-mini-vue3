@@ -4,7 +4,7 @@
 
 ## 已经实现过的模块
 
-## reactivtiy
+## reactivity
 
 - [ ] reactive
 - [ ] readonly

@@ -21,8 +21,8 @@ describe("shallowReactive", () => {
 
     expect(nexProps).toBe(3);
 
-    // update
-    // props.bar++; //测试不通过
-    // expect(nexProps).toBe(4);
+    // update;
+    props.bar++;
+    expect(nexProps).toBe(4);
   });
 });

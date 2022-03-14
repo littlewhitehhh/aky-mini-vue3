@@ -1,11 +1,6 @@
 // import { track, trigger } from "./effect";
 import { isObject } from "../shared/index";
-import {
-  mutableHandlers,
-  readonlyHandlers,
-  shallowReactiveHandlers,
-  shallowReadonlyHandlers,
-} from "./baseHandler";
+import { mutableHandlers, readonlyHandlers, shallowReactiveHandlers, shallowReadonlyHandlers } from "./baseHandler";
 // import { track, trigger } from "./effect";
 
 /**
@@ -82,7 +77,7 @@ export function isReactive(obj) {
   // 我们可以用 obj[is_reactive]  来调用getter函数
   //  在getter函数中进行判断  如果 key ==="is_reactive"      return !isReadonly
 
-  //reactive对象-> getter-> key===ReactiveFlags.IS_RWACTIVE  return true -> !!rrue ->true
+  //reactive对象-> getter-> key===ReactiveFlags.IS_RWACTIVE  return true -> !!true ->true
   //非 reactive独享 ->不执行getter,对象业务ReactiveFlags.IS_RWACTIVE属性值 return undefined  -> !!undefined-> false
   return !!obj[ReactiveFlags.IS_REACTIVE];
 }
