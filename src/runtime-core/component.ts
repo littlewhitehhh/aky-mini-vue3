@@ -40,6 +40,7 @@ function setupStatefulComponent(instance: any) {
 
   //增加了代理对象
   //cxt
+  console.log({ _: 123 });
 
   console.log({ _: instance });
 

@@ -164,6 +164,7 @@ const nextChildren = [
     h("p", { key: "B" }, "B"),
     h("p", { key: "D" }, "D"),
     h("p", { key: "C" }, "C"),
+    h("p", { key: "aky" }, "aky"),
     h("p", { key: "Y" }, "Y"),
     h("p", { key: "E" }, "E"),
     h("p", { key: "F" }, "F"),
@@ -182,6 +183,8 @@ export default {
 
     render() {
         const self = this;
-        return self.isChange === true ? h("div", {}, nextChildren) : h("div", {}, prevChildren);
+        return self.isChange === true ?
+            h("div", {}, nextChildren) :
+            h("div", {}, prevChildren);
     },
 };
