@@ -31,7 +31,7 @@
 - [ ] 组件 emit
 - [ ] 组件 slots
 - [ ] getCurrentInstance
-- [ ] 更新 element
+- [x] 更新 element
 
 ## runtime-dom
 
