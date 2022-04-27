@@ -15,7 +15,7 @@ export function createRenderer(options) {
   } = options;
 
   function render(vnode, container) {
-    debugger;
+    // debugger;
     patch(null, vnode, container, null, null);
   }
 
@@ -364,12 +364,16 @@ export function createRenderer(options) {
   }
   //componentvnode.type为component类型
   function processComponent(n1, n2: any, container: any, parentComponent, anchor) {
-    mountComponent(n1, n2, container, parentComponent, anchor);
+    if (!n1) {
+      mountComponent(n1, n2, container, parentComponent, anchor);
+    } else {
+      updateComponent(n1, n2);
+    }
   }
 
   //组件初始化
   function mountComponent(n1, initialVNode: any, container, parentComponent, anchor) {
-    const instance = createComponentInstance(initialVNode, parentComponent);
+    const instance = (initialVNode.component = createComponentInstance(initialVNode, parentComponent));
 
     setupComponent(instance);
     setupRenderEffect(instance, initialVNode, container, anchor);
@@ -377,7 +381,7 @@ export function createRenderer(options) {
 
   function setupRenderEffect(instance: any, initialVNode, container, anchor) {
     //响应式
-    effect(() => {
+    instance.update = effect(() => {
       // 区分式初始化还是更新
       if (!instance.isMounted) {
         //init
@@ -407,6 +411,12 @@ export function createRenderer(options) {
         patch(preSubTree, subTree, container, instance, anchor);
       }
     });
+  }
+
+  function updateComponent(n1, n2) {
+    //获取到挂载到vnode上的component
+    const instance = (n2.component = n1.component);
+    instance.update();
   }
 
   return {
