@@ -49,23 +49,15 @@
 - [Vue3 源码学习（2）--响应式系统（1）](https://juejin.cn/post/7074496267061035038/)
 - [Vue3 源码学习（3）--响应式系统（2）](https://juejin.cn/post/7074847535621210126/)
 - [Vue3 源码学习（4）--响应式系统（3）](https://juejin.cn/post/7075139625592815624/)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 694dacf (test(diff算法 array to array): test)
--
-
 - [Vue3 源码学习（4）--响应式系统（3）](https://juejin.cn/post/7075139625592815624)
 - [Vue3 源码学习（5）--runtime-core（1）--初始化（1）](https://juejin.cn/post/7079687116841549855)
 - [Vue3 源码学习（6）--runtime-core（2）--初始化（2）](https://juejin.cn/post/7082212664067227679)
 - [vue3 源码学习（6） -- runtime-core（3）：更新 element（1）](https://juejin.cn/post/7083065686150348836/)
 - [vue3 源码学习（6） -- runtime-core（3）：更新 element（2）:双端 diff 算法](https://juejin.cn/post/7083459283458719757)
-  > > > > > > > tmp
-=======
 - [Vue3 源码学习（5）--响应式系统（3）](https://juejin.cn/post/7075139625592815624)
 - [Vue3 源码学习（6）--runtime-core（1）--初始化（1）](https://juejin.cn/post/7079687116841549855)
 - [Vue3 源码学习（7）--runtime-core（2）--初始化（2）](https://juejin.cn/post/7082212664067227679)
 - [vue3源码学习（8） -- runtime-core（3）：更新element（1）](https://juejin.cn/post/7083065686150348836/)
 - [vue3源码学习（9） -- runtime-core（4）：更新element（2）:双端diff算法](https://juejin.cn/post/7083459283458719757)
 
->>>>>>> 5e42ccd2f6cab983f7c408734cc7a477ed6567c8
+
