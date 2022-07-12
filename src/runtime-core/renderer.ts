@@ -15,7 +15,7 @@ export function createRenderer(options) {
   } = options;
 
   function render(vnode, container) {
-    // debugger;
+    debugger;
     patch(null, vnode, container, null, null);
   }
 
