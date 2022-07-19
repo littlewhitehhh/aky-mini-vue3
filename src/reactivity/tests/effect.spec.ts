@@ -21,7 +21,8 @@ describe("effect", () => {
     expect(nextAge).toBe(12);
   });
   it("should return runner when call effect", () => {
-    // 1、调用effect(fn) 会返回一个runner函数 -> 调用runner() 会再次调用fn -> 返回fn的返回值
+    // 1、调用effect(fn) 会返回一个function runner函数
+    //2、调用runner() 会再次调用fn -> 返回fn的返回值
 
     let foo = 0;
     const runner = effect(() => {

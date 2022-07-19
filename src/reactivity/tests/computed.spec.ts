@@ -36,11 +36,11 @@ describe("computed", () => {
     expect(getter).toHaveBeenCalledTimes(1);
 
     // should not compute until needed
-    value.foo = 1; // trigger -> effect ->get 重新执行了
+    value.foo = 2; // trigger -> effect ->get 重新执行了
     expect(getter).toHaveBeenCalledTimes(1);
 
     // now it should compute
-    expect(cValue.value).toBe(1);
+    expect(cValue.value).toBe(2);
     expect(getter).toHaveBeenCalledTimes(2);
 
     // should not compute again

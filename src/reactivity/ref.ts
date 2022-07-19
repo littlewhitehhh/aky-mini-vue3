@@ -19,7 +19,8 @@ class RefImpl {
     // 将传入的值赋值给实例的私有属性property_value
     this._rawValue = value;
     //value 为对象的话    需要转换为reactive包裹value
-    this._value = isObject(value) ? reactive(value) : value;
+    // this._value = isObject(value) ? reactive(value) : value;
+    this._value = convert(value);
     this.dep = new Set();
   }
   get value() {
