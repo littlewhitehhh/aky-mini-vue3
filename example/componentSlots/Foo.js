@@ -13,7 +13,7 @@ export const Foo = {
 
         return h("div", {}, [foo, h("div", {}, renderSlots(this.$slots))]);
 
-        const age = 18;
+        // const age = 18
         // renderSlots
         //1、获取到要渲染的元素
         //2、获取到渲染的位置

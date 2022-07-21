@@ -23,7 +23,7 @@ export const App = {
                 },
             },
             // "hi" + this.msg
-            //this.$el    -> get 当前component的 root element
+            //this.$el    -> get  当前component的 root element
             //string
             // "hi mini-vue"
             //array

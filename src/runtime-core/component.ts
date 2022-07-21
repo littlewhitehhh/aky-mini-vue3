@@ -1,12 +1,13 @@
 import { proxyRefs } from "../index";
 import { shallowReadonly } from "../reactivity/reactive";
-import { emit } from "./componentEmit";
+import { emit } from "./componentEmit"; //处理emit
 import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { initSlot } from "./componentSlots";
 
 export function createComponentInstance(vnode, parent) {
   const component = {
+    //初始化
     vnode,
     type: vnode.type,
     setupState: {}, //记录setup函数执行后返回的结果
@@ -18,7 +19,7 @@ export function createComponentInstance(vnode, parent) {
     isMounted: false,
     subTree: {},
   };
-  component.emit = emit.bind(null, component) as any;
+  component.emit = emit.bind(null, component) as any; //绑定instance为this 并返回函数
   return component;
 }
 

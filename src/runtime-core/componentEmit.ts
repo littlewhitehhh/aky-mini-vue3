@@ -1,7 +1,7 @@
 import { camelize, capitalize, toHandlerKey } from "../shared/index";
 
 export function emit(instance, event, ...args) {
-  // console.log("emit" + event);
+  console.log("emit" + event);
 
   //  instance.props  有没有对应event的回调
   const { props } = instance;

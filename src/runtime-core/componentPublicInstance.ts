@@ -10,9 +10,9 @@ export const PublicInstanceProxyHandlers = {
   get({ _: instance }, key) {
     //setupState
     const { setupState, props } = instance;
-    if (key in setupState) {
-      return setupState[key];
-    }
+    // if (key in setupState) {
+    //   return setupState[key];
+    // }
 
     if (hasOwn(setupState, key)) {
       return setupState[key];

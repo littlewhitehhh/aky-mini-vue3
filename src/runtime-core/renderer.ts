@@ -15,7 +15,7 @@ export function createRenderer(options) {
   } = options;
 
   function render(vnode, container) {
-    debugger;
+    // debugger;
     patch(null, vnode, container, null, null);
   }
 
@@ -230,7 +230,7 @@ export function createRenderer(options) {
   }
 
   function patchKeyChildren(c1, c2, container, parentComponent, anchor) {
-    debugger;
+    // debugger;
     let i = 0;
     let e1 = c1.length - 1;
     let e2 = c2.length - 1;
