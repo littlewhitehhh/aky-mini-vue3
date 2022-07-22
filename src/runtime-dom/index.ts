@@ -1,5 +1,6 @@
 import { createRenderer } from "../runtime-core/index";
 
+//创建element元素
 function createElement(type) {
   return document.createElement(type);
 }
@@ -20,6 +21,7 @@ function createElement(type) {
 //   }
 // }
 
+//创建props
 function patchProp(el, key, prevVal, nextVal) {
   const isOn = (key: string) => /^on[A-Z]/.test(key);
   if (isOn(key)) {
@@ -33,6 +35,8 @@ function patchProp(el, key, prevVal, nextVal) {
     }
   }
 }
+
+//指定位置插入
 function insert(child, parent, anchor) {
   //只是添加到后面
   // parent.append(child);
@@ -41,6 +45,7 @@ function insert(child, parent, anchor) {
   parent.insertBefore(child, anchor || null);
 }
 
+//删除children
 function remove(child) {
   const parent = child.parentNode;
   if (parent) {

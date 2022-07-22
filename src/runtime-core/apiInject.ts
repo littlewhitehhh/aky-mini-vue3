@@ -14,7 +14,7 @@ export function provide(key, value) {
     //init    不能每次都初始化，只有第一次初始化
     //判断初始化状态     当前组件的provides = parentProvides
     if (provides === parentProvides) {
-      provides = currentInstance.provides = Object.create(parentProvides);
+      provides = currentInstance.provides = Object.create(parentProvides); //利用原型原型链的机制 来进行多层inject provides
     }
 
     provides[key] = value;
