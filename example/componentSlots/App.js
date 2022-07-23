@@ -10,10 +10,10 @@ export const App = {
         //希望children里面的p标签能够在foo组件中渲染出来
 
         //传入单值
-        const foo = h(Foo, {}, h("p", {}, "123"));
+        // const foo = h(Foo, {}, h("p", {}, "123"));
 
         // 传入数组
-        // const foo = h(Foo, {}, [h("p", {}, "123"), h("p", {}, 456)]);
+        // const foo = h(Foo, {}, [h("p", {}, "123"), h("p", {}, '456')]);
 
         //具名插槽   需要知道key value   所以用到obj
         // const foo = h(
@@ -24,14 +24,15 @@ export const App = {
         // );
 
         //作用域插槽
-        // const foo = h(
-        //     Foo, {}, {
-        //         // header: ({ age }) => h("p", {}, "header" + age),
-        //         header: ({ age }) => h("p", {}, "header" + age),
+        const foo = h(
+            Foo, {}, {
+                // header: ({ age }) => h("p", {}, "header" + age),
+                header: ({ age }) => h("p", {}, "header" + age),
 
-        //         footer: () => [h("p", {}, "footer"), createTextVnode("你好呀！")],
-        //     }
-        // );
+                footer: () => [h("p", {}, "footer"), createTextVnode("你好呀！")]
+                    // footer: () => h("p", {}, "footer")
+            }
+        );
         return h("div", {}, [app, foo]);
     },
     setup() {

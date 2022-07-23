@@ -11,18 +11,25 @@ export function initSlot(instance, children) {
 
   //   slots[key] = normalizeSlotsValue(value);
   // }
-  // instance.slots = slots
 
-  const { vnode } = instance;
-  if (vnode.shapeFlag & shapeFlags.slot_children) {
-    normalizeObjectSlots(children, instance.slots);
-  }
+  //
+  // const { vnode } = instance;
+  // if (vnode.shapeFlag & shapeFlags.slot_children) {
+  // console.log("isntance.slots:" + instance.slots);
+
+  normalizeObjectSlots(children, instance.slots);
+  // }
+  // instance.slots = slots;
 }
 
 function normalizeObjectSlots(children, slots) {
+  // console.log("isntance.slots:" + JSON.stringify(slots));
   for (const key in children) {
     const value = children[key];
     slots[key] = (props) => normalizeSlotsValue(value(props));
+    // slots[key] = (props) => normalizeSlotsValue(value);
+
+    console.log("isntance.slots:" + slots);
   }
 }
 function normalizeSlotsValue(value) {
