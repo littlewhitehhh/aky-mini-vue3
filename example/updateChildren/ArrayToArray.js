@@ -170,6 +170,31 @@ const nextChildren = [
     h("p", { key: "F" }, "F"),
     h("p", { key: "G" }, "G"),
 ];
+
+
+
+//fix c节点应该是move 而不是移除后创建
+
+// const prevChildren = [
+//     h("p", { key: "A" }, "A"),
+//     h("p", {}, "C"),
+
+//     h("p", { key: "B" }, "B"),
+
+//     h("p", { key: "D" }, "D"),
+
+// ];
+
+// const nextChildren = [
+//     h("p", { key: "A" }, "A"),
+
+//     h("p", { key: "B" }, "B"),
+//     h("p", {}, "C"),
+
+//     h("p", { key: "D" }, "D"),
+
+
+// ];
 export default {
     name: "ArrayToArray",
 

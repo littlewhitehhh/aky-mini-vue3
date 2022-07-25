@@ -265,7 +265,7 @@ export function createRenderer(options) {
     if (i > e1) {
       if (i <= e2) {
         const nextPos = e2 + 1;
-        // const anchor = i + 1 < c2.length ? c2[nextPos].el : null;
+        // const anchor = i + 1 < c2.length ? c2[nextPos].el : null;    有bug
         const anchor = nextPos < c2.length ? c2[nextPos].el : null;
 
         while (i <= e2) {
@@ -274,7 +274,7 @@ export function createRenderer(options) {
         }
       }
     } else if (i > e2) {
-      //4、新的比老的长
+      //4、新的比老少
       while (i <= e1) {
         hostRemove(c1[i].el);
         i++;
@@ -284,18 +284,21 @@ export function createRenderer(options) {
       let s1 = i;
       let s2 = i;
       let patched = 0;
-      const toBePatch = e2 - s2 + 1;
+      const toBePatch = e2 - s2 + 1; //记录新节点的数量
       //建立新child.key的映射表
       const keyToNewIndexMap = new Map();
 
-      //初始化映射表
+      //简历 最长递归子序列的映射表
       const newIndexToOldIndexMap = new Array(toBePatch);
 
       let moved = false;
       let maxNewIndexSoFar = 0;
+      //初始化  最长递归子序列的映射表
       for (let i = 0; i < toBePatch; i++) {
         newIndexToOldIndexMap[i] = 0;
       }
+
+      //将新的需要更新的（key：索引） 添加到映射表中
       for (let i = s2; i <= e2; i++) {
         let nextChild = c2[i];
         keyToNewIndexMap.set(nextChild.key, i);
@@ -305,6 +308,7 @@ export function createRenderer(options) {
         const prevChild = c1[i];
 
         if (patched >= toBePatch) {
+          //patch的数量大于需要更新的数量时 表示新的需要更新的已经更新完毕，剩下多的可以直接删除
           hostRemove(prevChild.el);
           continue;
         }
@@ -315,14 +319,14 @@ export function createRenderer(options) {
           newIndex = keyToNewIndexMap.get(prevChild.key);
         } else {
           //无key
-          for (let j = s2; j < e2; j++) {
+          for (let j = s2; j <= e2; j++) {
             if (isSameVnodeType(prevChild, c2[j])) {
               newIndex = j;
               break;
             }
           }
         }
-
+        //删除逻辑
         if (newIndex === undefined) {
           hostRemove(prevChild.el);
         } else {
@@ -331,13 +335,15 @@ export function createRenderer(options) {
           } else {
             moved = true;
           }
-          newIndexToOldIndexMap[newIndex - s2] = i + 1;
-
+          //新老节点建立映射关系
+          newIndexToOldIndexMap[newIndex - s2] = i + 1; //i+1  避免i=0的情况
+          //更新逻辑
           patch(prevChild, c2[newIndex], container, parentComponent, null);
-          patched++;
+          patched++; //更新一次 数量+1
         }
       }
 
+      //得到最长递增子序列
       const increasingNewIndexSequence = moved ? getSequence(newIndexToOldIndexMap) : [];
       let j = increasingNewIndexSequence.length - 1;
 
@@ -346,6 +352,7 @@ export function createRenderer(options) {
         const nextChild = c2[nextIndex];
         const anchor = nextIndex + 1 < c2.length ? c2[nextIndex + 1].el : null;
         if (newIndexToOldIndexMap[i] === 0) {
+          console.log("新增");
           patch(null, nextChild, container, parentComponent, anchor);
         } else if (moved) {
           if (j < 0 || i !== increasingNewIndexSequence[j]) {
@@ -387,7 +394,7 @@ export function createRenderer(options) {
         //init
         console.log("init");
         const { proxy } = instance;
-        const subTree = (instance.subTree = instance.render.call(proxy)); //subTree 虚拟节点树  vnode树    instance.subtree 用于存储之前的subtree
+        const subTree = (instance.subTree = instance.render.call(proxy)); //subTree 虚拟节点树  vnode树    instance.subtree 用于存储之气那的
         console.log(subTree);
 
         patch(null, subTree, container, instance, anchor);
@@ -424,7 +431,7 @@ export function createRenderer(options) {
   };
 }
 
-//最长递增子序列
+//最长递增子序列   return 递归子序列的索引数组
 function getSequence(arr) {
   const p = arr.slice();
   const result = [0];

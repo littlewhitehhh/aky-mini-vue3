@@ -21,7 +21,7 @@ function createElement(type) {
 //   }
 // }
 
-//创建props
+//创建、更新props
 function patchProp(el, key, prevVal, nextVal) {
   const isOn = (key: string) => /^on[A-Z]/.test(key);
   if (isOn(key)) {
