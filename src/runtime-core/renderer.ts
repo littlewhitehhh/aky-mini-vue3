@@ -2,6 +2,7 @@ import { effect } from "../reactivity/effect";
 import { EMPTY_OBJ, isObject } from "../shared/index";
 import { shapeFlags } from "../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
+import { shouldUpdateComponent } from "./componentUpdateUtils";
 import { createAppAPI } from "./createApp";
 import { Fragment, Text } from "./vnode";
 
@@ -406,7 +407,12 @@ export function createRenderer(options) {
       } else {
         //update
         console.log("update");
-        const { proxy } = instance;
+        const { proxy, next, vnode } = instance;
+        if (next) {
+          next.el = vnode.el;
+
+          updateComponentPreRender(instance, next);
+        }
         const subTree = instance.render.call(proxy); //subTree 虚拟节点树  vnode树
         console.log(subTree);
         const preSubTree = instance.subTree;
@@ -423,7 +429,13 @@ export function createRenderer(options) {
   function updateComponent(n1, n2) {
     //获取到挂载到vnode上的component
     const instance = (n2.component = n1.component);
-    instance.update();
+    if (shouldUpdateComponent(n1, n2)) {
+      instance.next = n2;
+      instance.update();
+    } else {
+      n2.el = n1.el;
+      instance.vnode = n2;
+    }
   }
 
   return {
@@ -471,4 +483,11 @@ function getSequence(arr) {
     v = p[v];
   }
   return result;
+}
+
+//组件更新之前  需要将组件中的props 等数据先更新
+function updateComponentPreRender(instance: any, nextVndoe: any) {
+  instance.vnode = nextVndoe;
+  instance.next = null;
+  instance.props = nextVndoe.props;
 }
