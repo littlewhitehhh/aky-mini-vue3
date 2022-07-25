@@ -4,6 +4,7 @@ import { shapeFlags } from "../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 import { shouldUpdateComponent } from "./componentUpdateUtils";
 import { createAppAPI } from "./createApp";
+import { queueJobs } from "./scheduler";
 import { Fragment, Text } from "./vnode";
 
 export function createRenderer(options) {
@@ -389,41 +390,49 @@ export function createRenderer(options) {
 
   function setupRenderEffect(instance: any, initialVNode, container, anchor) {
     //响应式
-    instance.update = effect(() => {
-      // 区分式初始化还是更新
-      if (!instance.isMounted) {
-        //init
-        console.log("init");
-        const { proxy } = instance;
-        const subTree = (instance.subTree = instance.render.call(proxy)); //subTree 虚拟节点树  vnode树    instance.subtree 用于存储之气那的
-        console.log(subTree);
+    instance.update = effect(
+      () => {
+        // 区分式初始化还是更新
+        if (!instance.isMounted) {
+          //init
+          console.log("init");
+          const { proxy } = instance;
+          const subTree = (instance.subTree = instance.render.call(proxy)); //subTree 虚拟节点树  vnode树    instance.subtree 用于存储之气那的
+          console.log(subTree);
 
-        patch(null, subTree, container, instance, anchor);
+          patch(null, subTree, container, instance, anchor);
 
-        //element ->mount
-        initialVNode.el = subTree.el;
+          //element ->mount
+          initialVNode.el = subTree.el;
 
-        instance.isMounted = true;
-      } else {
-        //update
-        console.log("update");
-        const { proxy, next, vnode } = instance;
-        if (next) {
-          next.el = vnode.el;
+          instance.isMounted = true;
+        } else {
+          //update
+          console.log("update");
+          const { proxy, next, vnode } = instance;
+          if (next) {
+            next.el = vnode.el;
 
-          updateComponentPreRender(instance, next);
+            updateComponentPreRender(instance, next);
+          }
+          const subTree = instance.render.call(proxy); //subTree 虚拟节点树  vnode树
+          console.log(subTree);
+          const preSubTree = instance.subTree;
+
+          console.log(preSubTree);
+          console.log(subTree);
+          instance.subTree = subTree;
+
+          patch(preSubTree, subTree, container, instance, anchor);
         }
-        const subTree = instance.render.call(proxy); //subTree 虚拟节点树  vnode树
-        console.log(subTree);
-        const preSubTree = instance.subTree;
-
-        console.log(preSubTree);
-        console.log(subTree);
-        instance.subTree = subTree;
-
-        patch(preSubTree, subTree, container, instance, anchor);
+      },
+      {
+        scheduler() {
+          console.log("scheduler执行啦");
+          queueJobs(instance.update);
+        },
       }
-    });
+    );
   }
 
   function updateComponent(n1, n2) {
