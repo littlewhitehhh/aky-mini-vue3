@@ -9,7 +9,7 @@ export function baseParse(content: string) {
   //message
   const context = createParseContext(content); //{source:message}
   //重构
-  return createRoot(parseChildren(context)); //
+  return createRoot(parseChildren(context, [])); //
   // return {
   //   children: [
   //     {
@@ -38,27 +38,31 @@ function createRoot(children) {
   };
 }
 
-function parseChildren(context) {
+function parseChildren(context, ancestors) {
+  // ancestors 祖先
   const nodes: any = [];
-  let node;
-  //解析插值{{}}
-  if (context.source.startsWith("{{")) {
-    node = parseInterpolation(context);
-  } else if (context.source[0] === "<") {
-    //element类型
-    if (/[a-z]/.test(context.source[1])) {
-      console.log("parse.element");
-      node = parseElement(context);
+
+  while (!isEnd(context, ancestors)) {
+    let node;
+    //解析插值{{}}
+    if (context.source.startsWith("{{")) {
+      node = parseInterpolation(context);
+    } else if (context.source[0] === "<") {
+      //element类型
+      if (/[a-z]/.test(context.source[1])) {
+        console.log("parse.element");
+        node = parseElement(context, ancestors);
+      }
     }
+    // } else {
+    //   //text类型
+    //   node = parseText(context);
+    // }
+    if (!node) {
+      node = parseText(context);
+    }
+    nodes.push(node);
   }
-  // } else {
-  //   //text类型
-  //   node = parseText(context);
-  // }
-  if (!node) {
-    node = parseText(context);
-  }
-  nodes.push(node);
   return nodes;
   // return [
   //   {
@@ -68,8 +72,35 @@ function parseChildren(context) {
   // ];
 }
 
+function isEnd(context, ancestors) {
+  //<div></div>
+
+  //结束的条件
+  //1、context.source 没有值的时候
+  //2、当遇到结束标签时候
+
+  //2
+
+  const s = context.source;
+  //</div>
+  if (s.startsWith("</")) {
+    for (let i = ancestors.length - 1; i >= 0; i--) {
+      const tag = ancestors[i].tag;
+      if (startsWithEndTagOpen(s, tag)) {
+        return true;
+      }
+    }
+  }
+
+  // if (parentTag && s.startsWith(`</${parentTag}>`)) {
+  //   return true;
+  // }
+  //1
+  return !context.source;
+}
+
 //element类型parse
-function parseElement(context: any) {
+function parseElement(context: any, ancestors) {
   //implement    <div></div>
   // 1、解析tag
   // 2、删除处理完成的代码
@@ -92,8 +123,20 @@ function parseElement(context: any) {
   // };
 
   // 重构
-  const element = parseTag(context, TagType.Start);
-  parseTag(context, TagType.End);
+  const element: any = parseTag(context, TagType.Start);
+  ancestors.push(element);
+  element.children = parseChildren(context, ancestors);
+  ancestors.pop();
+
+  // if (context.source.slice(2, 2 + element.tag.length) === element.tag) {
+
+  //重构
+  if (startsWithEndTagOpen(context.source, element.tag)) {
+    parseTag(context, TagType.End);
+  } else {
+    throw new Error(`缺少结束标签:${element.tag}`);
+  }
+
   console.log("-------", context.source);
 
   return element;
@@ -147,8 +190,8 @@ function parseInterpolation(context) {
   console.log(content);
 
   // 例如{{message}}</div>   {{message}}处理完毕的 删除掉 剩下</div>
-  // context.source = context.source.slice(rawContentLength + openDelimiter.length);
-  advanceBy(context, rawContentLength + openDelimiter.length);
+  // context.source = context.source.slice(closeDelimiter.length);
+  advanceBy(context, closeDelimiter.length);
   console.log("context.source", context.source);
 
   return {
@@ -170,8 +213,20 @@ function parseText(context) {
   // advanceBy(context, content.length);
   // console.log(context.source);
 
+  let endIndex = context.source.length;
+  let endTokens = ["<", "{{"];
+
+  for (let i = 0; i < endTokens.length; i++) {
+    const index = context.source.indexOf(endTokens[i]);
+    if (index !== -1 && endIndex > index) {
+      //！==-1 证明没有插值
+      endIndex = index;
+    }
+  }
+
   //重构
-  const content = parseTextData(context, context.source.length);
+  const content = parseTextData(context, endIndex);
+  console.log("content _______", content);
 
   return {
     type: NodeTypes.TEXT,
@@ -190,4 +245,8 @@ function parseTextData(context, length) {
 
   advanceBy(context, length);
   return content;
+}
+
+function startsWithEndTagOpen(source, tag) {
+  return source.startsWith("</") && source.slice(2, 2 + tag.length).toLowerCase() === tag.toLowerCase();
 }
