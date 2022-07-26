@@ -7,7 +7,7 @@ const enum TagType {
 
 export function baseParse(content: string) {
   //message
-  const context = createParseContext(content); //{ source:message}
+  const context = createParseContext(content); //{source:message}
   //重构
   return createRoot(parseChildren(context)); //
   // return {
@@ -45,12 +45,19 @@ function parseChildren(context) {
   if (context.source.startsWith("{{")) {
     node = parseInterpolation(context);
   } else if (context.source[0] === "<") {
+    //element类型
     if (/[a-z]/.test(context.source[1])) {
       console.log("parse.element");
       node = parseElement(context);
     }
   }
-
+  // } else {
+  //   //text类型
+  //   node = parseText(context);
+  // }
+  if (!node) {
+    node = parseText(context);
+  }
   nodes.push(node);
   return nodes;
   // return [
@@ -61,6 +68,7 @@ function parseChildren(context) {
   // ];
 }
 
+//element类型parse
 function parseElement(context: any) {
   //implement    <div></div>
   // 1、解析tag
@@ -115,6 +123,7 @@ function parseTag(context: any, TagType) {
   };
 }
 
+//{{}}插值类型parse
 function parseInterpolation(context) {
   console.log(context);
 
@@ -130,7 +139,8 @@ function parseInterpolation(context) {
   console.log(context.source);
 
   const rawContentLength = closeIndex - openDelimiter.length;
-  const rawContent = context.source.slice(0, rawContentLength); // messag
+  // const rawContent = context.source.slice(0, rawContentLength); // message
+  const rawContent = parseTextData(context, rawContentLength);
 
   //边缘处理  利于 {{ message}}  双括号中有空格
   const content = rawContent.trim();
@@ -147,7 +157,37 @@ function parseInterpolation(context) {
   };
 }
 
-//裁剪工具函数
+//TEXT类型parse
+function parseText(context) {
+  //1、获取content
+  //2、推进代码  ： 删除已经处理的代码
+
+  //1
+  // const content = context.source.slice(0, context.source.length);
+  // console.log(content);
+
+  //2
+  // advanceBy(context, content.length);
+  // console.log(context.source);
+
+  //重构
+  const content = parseTextData(context, context.source.length);
+
+  return {
+    type: NodeTypes.TEXT,
+    content,
+  };
+}
+
+//推进工具函数
 function advanceBy(context: any, length: number) {
   context.source = context.source.slice(length);
+}
+
+//裁剪工具函数
+function parseTextData(context, length) {
+  const content = context.source.slice(0, length);
+
+  advanceBy(context, length);
+  return content;
 }
