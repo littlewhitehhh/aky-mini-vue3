@@ -397,7 +397,7 @@ export function createRenderer(options) {
           //init
           console.log("init");
           const { proxy } = instance;
-          const subTree = (instance.subTree = instance.render.call(proxy)); //subTree 虚拟节点树  vnode树    instance.subtree 用于存储之气那的
+          const subTree = (instance.subTree = instance.render.call(proxy, proxy)); //subTree 虚拟节点树  vnode树    instance.subtree 用于存储之气那的
           console.log(subTree);
 
           patch(null, subTree, container, instance, anchor);
@@ -415,7 +415,7 @@ export function createRenderer(options) {
 
             updateComponentPreRender(instance, next);
           }
-          const subTree = instance.render.call(proxy); //subTree 虚拟节点树  vnode树
+          const subTree = instance.render.call(proxy, proxy); //subTree 虚拟节点树  vnode树
           console.log(subTree);
           const preSubTree = instance.subTree;
 
