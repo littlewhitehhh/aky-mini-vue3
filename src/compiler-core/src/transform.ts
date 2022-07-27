@@ -1,10 +1,11 @@
-export function transform(root, options) {
+export function transform(root, options = {}) {
   const context = createTransformContext(root, options);
 
   //1、遍历 ——深度优先搜索  递归
+  // 2、修改text content
   traverseNode(root, context);
 
-  // 2、修改text content
+  createRootChildren(root);
 }
 
 function createTransformContext(root: any, options: any) {
@@ -38,4 +39,7 @@ function traverseChildren(node, context) {
       traverseNode(node, context);
     }
   }
+}
+function createRootChildren(root: any) {
+  root.codegenNode = root.children[0];
 }
