@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`codegen string 1`] = `"return function render(_cxt,_cache){return 'hi'}"`;

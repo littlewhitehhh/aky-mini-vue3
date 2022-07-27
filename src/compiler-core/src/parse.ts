@@ -35,6 +35,7 @@ function createParseContext(content): any {
 function createRoot(children) {
   return {
     children,
+    type: NodeTypes.ROOT,
   };
 }
 
