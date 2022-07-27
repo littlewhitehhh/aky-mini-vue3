@@ -24,3 +24,5 @@ export const capitalize = (str: string) => {
 export const toHandlerKey = (str: string) => {
   return str ? "on" + str : "";
 };
+
+export const isString = (value) => typeof value === "string";
