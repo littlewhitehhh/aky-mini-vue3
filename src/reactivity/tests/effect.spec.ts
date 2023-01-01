@@ -81,12 +81,12 @@ describe("effect", () => {
     });
     obj.prop = 2;
     expect(dummy).toBe(2);
-    stop(runner); //
+    stop(runner);
     obj.prop = 3;
-    expect(dummy).toBe(2);
+    expect(dummy).toBe(2); // trigger失效  代表依赖清空？怎么清空依赖呢？
     obj.prop++;
     expect(dummy).toBe(2);
-    runner();
+    runner(); // runner  执行 effect.run  执行了fn -> obj.prop 触发了get  依赖又收集了
     expect(dummy).toBe(4);
   });
 
