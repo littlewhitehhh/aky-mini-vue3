@@ -27,9 +27,9 @@
 - [x] shapeFlags
 - [x] 组件道理对象 Proxy
 - [x] 注册事件
-- [ ] 组件 props
-- [ ] 组件 emit
-- [ ] 组件 slots
+- [x] 组件 props
+- [x] 组件 emit
+- [x] 组件 slots
 - [ ] getCurrentInstance
 - [x] 更新 element
 
@@ -39,7 +39,12 @@
 
 ## compiler
 
-暂未实现
+- [ ] 解析插值
+- [ ] 解析 element
+- [ ] 解析 text 功能
+- [ ] 解析 三种联合类型功能
+- [ ] parse 的实现
+      未完待续
 
 ## 掘金文章
 
