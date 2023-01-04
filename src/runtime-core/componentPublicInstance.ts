@@ -8,6 +8,9 @@ const PublicPropertiesMap = {
 
 export const PublicInstanceProxyHandlers = {
   get({ _: instance }, key) {
+    //这里的_：instance是解构
+    // console.log("instance:", instance);
+
     //setupState
     const { setupState, props } = instance;
     // if (key in setupState) {

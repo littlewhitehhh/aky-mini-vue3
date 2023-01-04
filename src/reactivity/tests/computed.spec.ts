@@ -28,7 +28,7 @@ describe("computed", () => {
     //没调用cValue  就不会调用getter
     expect(getter).not.toHaveBeenCalled();
 
-    expect(cValue.value).toBe(1);
+    expect(cValue.value).toBe(1); //cValue.value触发get value -> 执行getter -> 这里才会触发value.foo ->触发reactive数据的getter 收集依赖
     expect(getter).toHaveBeenCalledTimes(1);
 
     // should not compute again

@@ -20,7 +20,7 @@ export function createComponentInstance(vnode, parent) {
     isMounted: false,
     subTree: {},
   };
-  component.emit = emit.bind(null, component) as any; //绑定instance为this 并返回函数
+  component.emit = emit.bind(null, component) as any; //绑定instance为this 并返回函数   这里emit是从外部引入的emit
   return component;
 }
 

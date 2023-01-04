@@ -12,6 +12,7 @@ export const App = {
         //传入单值
         // const foo = h(Foo, {}, h("p", {}, "123"));
 
+
         // 传入数组
         // const foo = h(Foo, {}, [h("p", {}, "123"), h("p", {}, '456')]);
 

@@ -23,7 +23,9 @@ export function initSlot(instance, children) {
 }
 
 function normalizeObjectSlots(children, slots) {
-  // console.log("isntance.slots:" + JSON.stringify(slots));
+  // console.log("isntance.slots:" + JSON.stringify(slots));\
+  console.log("children", children);
+
   for (const key in children) {
     const value = children[key];
     slots[key] = (props) => normalizeSlotsValue(value(props));
