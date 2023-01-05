@@ -38,3 +38,7 @@ export function inject(key, defaultValue) {
     }
   }
 }
+
+/**
+ * 思路： provide提供数据    inject获取数据
+ */

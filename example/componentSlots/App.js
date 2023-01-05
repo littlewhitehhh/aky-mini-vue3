@@ -4,7 +4,7 @@ export const App = {
     name: "App",
 
     render() {
-        const app = h("div", {}, "App");
+        const app = h("div", {}, "App"); //vnode
 
         //怎么使用插槽   ---- 把对应的内容放到对应的组件的children中
         //希望children里面的p标签能够在foo组件中渲染出来
@@ -33,7 +33,7 @@ export const App = {
                 footer: () => [h("p", {}, "footer"), createTextVnode("你好呀！")]
                     // footer: () => h("p", {}, "footer")
             }
-        );
+        ); //vnode
         return h("div", {}, [app, foo]);
     },
     setup() {
