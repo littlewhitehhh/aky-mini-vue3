@@ -72,9 +72,34 @@ export const App = {
  * 更新逻辑 ：  可以看作是两个vnode对象之间的对比     n1 n2
  * 
  * 三个方面进行对比
- * type 
- * props
- * children
+ * type   
+ * 但是普通修改render函数 只会修改内部的props和 children  所以一般type不会改变，如果type改变了  会直接当作新的element直接挂在
  * 
- *
+ * props   patchProps
+ * 1、之前的值和现在的值不一样了   修改了值
+ * 遍历新的props，通过key获取到 newProps[key] 和 oldProps[key]
+ * newProps[key] ！= oldProps[key]  修改props的值（通过patchProp函数）
+ * hostPatchProp(el, key, oldProps[key], newProps[key])
+ * 
+ * 
+ * 2、新的值null || undefined    删除
+ * 同上面方法，因为新的props的key值没有发生变化
+ * 
+ * 
+ * 3、之前的值在新的里面没有了  删除
+ * 新的props值少了，证明新的props中的key与原来props的key不一样了，新的props的key值少了
+ * 这时候我们需要遍历老的props中key，查找当前key在新的props中是否存在
+ * newProps[key] === 'undefined'  删除当前key   hostPatchProp(el, key, oldProps[key], null)
+ * 
+ * 
+ * 
+ * children
+ * children 的类型 包括 string 和 array 两种类型
+ * 所以在进行children对比的时候就会产生四种情况
+ *  oldChildren  newChildren
+ *  string       string
+ *  string       array
+ *  array        string
+ *  array        array 
+ *  在updateChildren 的app.js中详细总结
  */
