@@ -189,7 +189,8 @@ export function createRenderer(options) {
   function patchChildren(n1, n2, container, parentComponent, anchor) {
     // ArrayToText
     //判断新节点的shapeFlag  判断 children是text还是array
-    const prevShapeFlag = n1.shapeFlag;
+    // const prevShapeFlag = n1.shapeFlag;
+    const { shapeFlag: prevShapeFlag } = n1.shapeFlag;
     const { shapeFlag } = n2;
     const c1 = n1.children;
     const c2 = n2.children;
