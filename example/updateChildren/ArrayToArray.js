@@ -146,7 +146,7 @@ import { h, ref } from "../../lib/mini-vue.esm.js";
 
 // 综合例子
 // a,b,(c,d,e,z),f,g
-// a,b,(d,c,y,e),f,g
+// a,b,(d,c,aky,y,e),f,g
 
 const prevChildren = [
     h("p", { key: "A" }, "A"),
@@ -262,8 +262,8 @@ export default {
  * 综合案例  此时 i= 2  e1=7  e2 = 6
  * 
  * 
- * 3、新的比老的多  
- * eg  a b              a b
+ * 3、新的比老的多  (两种情况)  
+ * eg  a b              a b            
  *     a b （c d）     （ c d） a b
  * 
  * 在左侧对比和右侧对比完成后 出现的一种情况
@@ -276,7 +276,7 @@ export default {
  * }
  * 
  * 
- * 4、老的比新的多
+ * 4、老的比新的多（同上两种情况）
  * 在左侧对比和右侧对比完成后 出现的一种情况
  * 如果 i >e2   i<=e1
  * else if(i>e2){
@@ -290,6 +290,27 @@ export default {
  * 
  * 
  * 5 中间对比(乱序部分)
+ * s1 = i
+ * s2 = i
+ * 中间部分下标应该在  [i,e1]  [i,e2]
+ * 中间乱序部分 可以通过遍历进行操作，时间复杂度为O(n)
+ * 我们在写v-for的时候都会增加:key的属性，所以也可以通过key这个唯一标识来进行操作增删改查 时间复杂度O(1)
+ * 映射表  存储的是  key(key的值)：i(下标)的格式  
+ *  
+ * 
+ * 首先建立映射表 keyToNewIndexMap = new Map()
+ * 遍历[s2,e2]的新节点   nextChild = c2[i]  keyToNewIndexMap.set(nextChild.key,i)  完成映射表数据
+ * 
+ * 遍历[s1,e1]的新节点  prevChild = c1[i]   
+ * let newIndex =  ketToNewIndexMap.get(prevChild.key)
+ * 
+ * prevChild有key  
+ * newIndex有值表明在新节点存在， patch(prevChild,c2[newIndex],container,parentComponent)
+ * newIndex没值表明在新节点不存在,直接删除 remove(prevChild.el)
+ * 
+ * prevChild无key   for循环遍历[s2,e2]的节点（j=s2）  判断 prevChild 是否与当前c2[j]是否相同 isSameVnode(prevChild)
+ * isSameVnode   indexIndex = j   break
+ * 
  * 
  * 
  * 
@@ -318,5 +339,33 @@ export default {
  *   删除老节点
  *      i++  
  *  }
+ * 中间对比
+ * }else {
+ *  s1 = i
+ *  s2 = i
+ *  patched = 0
+ *  toBePatch = e2-s2 +1
+ *  keyToNewIndexMap映射表建立
+ *  
+ * for(let i=o;i<=e2;i++) keyToNewIndexMap.set(c2[i].key,i)  填充数据
+ * 
+ * for (let i = s1; i <= e1; i++) {
+ *  prevChild = c1[i]
+ * 
+ *  if(patched >= toBePatched)  remove(prevChild.el) 
+ *  if(prevChid.ket !== null){
+ *      prevChild元素在新节点数组中的新索引 newIndex = keyToNewIndexMap.get(prevChid.key)
+ *  }else{
+ *      遍历新节点数组 for(let j = s2; i <= e2; i++){
+ *          if(isSameVnode(prevChild,c2[j]))   newIndex = j break
+ *      }
+ *  }
+ *   更新和删除
+ *  if(newIndex) patch(prevChild,c2[newIndex],container,parentComponent,null)   patched ++  
+ *  else remove(prevChid.el)  删除     
+ *  
+ * }
+ * 
+ * 
  * }
  */

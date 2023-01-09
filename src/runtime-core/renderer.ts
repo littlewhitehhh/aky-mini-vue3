@@ -287,11 +287,15 @@ export function createRenderer(options) {
       let s1 = i;
       let s2 = i;
       let patched = 0;
-      const toBePatch = e2 - s2 + 1; //记录新节点的数量
+      const toBePatch = e2 - s2 + 1; //记录新节点的数量   用于老节点多余新节点时  删除逻辑的优化
+      console.log(s2, e2);
+
+      console.log("toBePatch", toBePatch);
+
       //建立新child.key的映射表
       const keyToNewIndexMap = new Map();
 
-      //简历 最长递归子序列的映射表
+      //简历 最长递归子序列的映射表  最终结果是中间老节点新节点都有的节点在老节点数组的索引+1 排序
       const newIndexToOldIndexMap = new Array(toBePatch);
 
       let moved = false;
@@ -331,6 +335,8 @@ export function createRenderer(options) {
         }
         //删除逻辑
         if (newIndex === undefined) {
+          console.log("删除");
+
           hostRemove(prevChild.el);
         } else {
           if (newIndex >= maxNewIndexSoFar) {
@@ -348,6 +354,9 @@ export function createRenderer(options) {
 
       //得到最长递增子序列
       const increasingNewIndexSequence = moved ? getSequence(newIndexToOldIndexMap) : [];
+      console.log("newIndexToOldIndexMap", newIndexToOldIndexMap);
+      console.log("最长递增子序列", increasingNewIndexSequence);
+
       let j = increasingNewIndexSequence.length - 1;
 
       for (let i = toBePatch - 1; i >= 0; i--) {
