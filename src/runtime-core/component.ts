@@ -10,7 +10,7 @@ export function createComponentInstance(vnode, parent) {
     //初始化
     vnode,
     type: vnode.type,
-    next: null,
+    next: null, //下次更新的vnode节点
     setupState: {}, //记录setup函数执行后返回的结果
     props: {},
     slots: {},

@@ -43,3 +43,18 @@ export const App = {
         ])
     },
 }
+
+
+/**
+ * 组建的更新
+ * 
+ * 组件的渲染是一个开箱的过程，在props发生变化的时候就再次执行render函数
+ * 执行render函数就会创建新的subTree(vnode) 然后在进行patch(prevSubTree,subTree)
+ * 所以 在进行processComponent中 就要进行判断   是否有prevSubTree  
+ * 无 ---> mountComponent
+ * 有  ---> patchComponent  
+ * 
+ * 更新component  需要先更新数据（组件的props）
+ * 
+ * 
+ */
