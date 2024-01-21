@@ -1,42 +1,42 @@
-import { isObject } from "../shared/index";
-import { shapeFlags } from "../shared/shapeFlags";
+import { isObject } from '../shared/index'
+import { shapeFlags } from '../shared/shapeFlags'
 
-export const Fragment = Symbol("Fragment");
-export const Text = Symbol("Text");
+export const Fragment = Symbol('Fragment')
+export const Text = Symbol('Text')
 
-export { createVNode as createElementVnode };
+export { createVNode as createElementVnode }
 
 export function createVNode(type, props?, children?) {
-  const vnode = {
-    type,
-    props,
-    children,
-    key: props && props.key,
-    shapeFlag: getShapeFlag(type),
-    el: null, //$el用的
-    component: null,
-  };
-  //children
-  if (typeof children === "string") {
-    vnode.shapeFlag = vnode.shapeFlag | shapeFlags.text_children;
-  } else if (Array.isArray(children)) {
-    vnode.shapeFlag = vnode.shapeFlag | shapeFlags.array_children;
-  }
+	const vnode = {
+		type,
+		props,
+		children,
+		key: props && props.key,
+		shapeFlag: getShapeFlag(type),
+		el: null, //$el用的
+		component: null,
+	}
+	//children
+	if (typeof children === 'string') {
+		vnode.shapeFlag = vnode.shapeFlag | shapeFlags.text_children
+	} else if (Array.isArray(children)) {
+		vnode.shapeFlag = vnode.shapeFlag | shapeFlags.array_children
+	}
 
-  // 组件 + children 为object类型
-  if (vnode.shapeFlag & shapeFlags.stateful_component) {
-    if (isObject(children)) {
-      vnode.shapeFlag = vnode.shapeFlag | shapeFlags.slot_children;
-    }
-  }
+	// 组件 + children 为object类型
+	if (vnode.shapeFlag & shapeFlags.stateful_component) {
+		if (isObject(children)) {
+			vnode.shapeFlag = vnode.shapeFlag | shapeFlags.slot_children
+		}
+	}
 
-  return vnode;
+	return vnode
 }
 
 export function createTextVnode(text: string) {
-  return createVNode(Text, {}, text);
+	return createVNode(Text, {}, text)
 }
 
 function getShapeFlag(type) {
-  return typeof type === "string" ? shapeFlags.element : shapeFlags.stateful_component;
+	return typeof type === 'string' ? shapeFlags.element : shapeFlags.stateful_component
 }
